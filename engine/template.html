@@ -1,0 +1,239 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Anton;src:url(fonts/anton.woff2)}
+@font-face{font-family:Inter;src:url(fonts/inter-500.woff2);font-weight:500}
+@font-face{font-family:Inter;src:url(fonts/inter-600.woff2);font-weight:600}
+@font-face{font-family:Inter;src:url(fonts/inter-700.woff2);font-weight:700}
+@font-face{font-family:Inter;src:url(fonts/inter-800.woff2);font-weight:800}
+:root{--bg:#0A0C10;--bg2:#11141B;--ink:#F4F6F0;--mute:#8B93A1;--lime:#C8F031;--lime2:#9BC21A;--card:#151922;--line:#232935;--bad:#FF5A4E}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden}
+body{background:var(--bg);font-family:Inter;color:var(--ink);position:relative}
+#bgcourt{position:absolute;inset:0;opacity:.5}
+#glow{position:absolute;width:1100px;height:1100px;border-radius:50%;background:radial-gradient(circle,rgba(200,240,49,.16),rgba(200,240,49,0) 62%)}
+#glow2{position:absolute;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle,rgba(80,110,255,.10),rgba(80,110,255,0) 60%)}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 55%,rgba(0,0,0,.55) 100%)}
+#flash{position:absolute;inset:0;background:var(--lime);opacity:0;mix-blend-mode:overlay;pointer-events:none}
+#wipe{position:absolute;left:0;right:0;height:14px;background:var(--lime);box-shadow:0 0 40px var(--lime);opacity:0}
+#prog{position:absolute;top:168px;left:150px;right:150px;display:flex;gap:10px}
+#prog div{flex:1;height:8px;border-radius:4px;background:#252b36;overflow:hidden}
+#prog i{display:block;height:100%;width:0;background:var(--lime)}
+#brand{position:absolute;top:214px;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:20px}
+#brand .w{font:46px/1 Anton;letter-spacing:.14em}
+#brand .w b{color:var(--lime);font-weight:normal}
+#brand .sp{font:800 26px Inter;letter-spacing:.14em;padding:10px 20px;border-radius:999px;background:var(--lime);color:#0A0C10}
+#brand .lv{font:700 24px Inter;letter-spacing:.1em;padding:9px 18px;border-radius:999px;border:2px solid #3a4250;color:var(--mute)}
+.scene{position:absolute;left:110px;right:150px;top:330px;bottom:430px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.kicker{font:700 48px/1.22 Inter;margin-bottom:34px;max-width:820px;color:#D9DEE6}
+.kicker em{font-style:normal;color:var(--lime)}
+.kicker span{display:inline-block;white-space:pre}
+.title{font:140px/0.95 Anton;text-transform:uppercase;letter-spacing:.005em}
+.title div{display:block}
+.title em{font-style:normal;color:var(--lime)}
+.title.sm{font-size:112px}
+.zone{margin-top:52px;width:100%;display:flex;flex-direction:column;align-items:center;gap:22px}
+.card{width:100%;display:flex;align-items:center;gap:26px;background:var(--card);border:3px solid var(--line);border-radius:22px;padding:22px 28px;text-align:left}
+.card.on{border-color:var(--lime);box-shadow:0 0 0 2px var(--lime),0 18px 50px rgba(200,240,49,.18)}
+.card .n{flex:none;width:74px;height:74px;border-radius:16px;background:#232935;color:var(--ink);font:50px/74px Anton;text-align:center}
+.card.on .n{background:var(--lime);color:#0A0C10}
+.card .t{font:46px/1.05 Anton;text-transform:uppercase}
+.card .s{font:500 29px/1.25 Inter;color:var(--mute);margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:20px}
+.chip{font:800 40px Inter;padding:18px 32px;border-radius:999px;background:var(--card);border:3px solid var(--line)}
+.chip.on{background:var(--lime);border-color:var(--lime);color:#0A0C10}
+.tip{width:100%;padding:40px 44px;border-radius:24px;background:linear-gradient(135deg,#1A2010,#151922);border:3px solid var(--lime);font:700 50px/1.18 Inter;text-align:left;position:relative}
+.tip:before{content:"CONSEJO";position:absolute;top:-24px;left:36px;font:800 24px Inter;letter-spacing:.16em;padding:8px 16px;border-radius:8px;background:var(--lime);color:#0A0C10}
+.tip em{font-style:normal;color:var(--lime)}
+.vs{width:100%;display:flex;flex-direction:column;gap:20px}
+.vs .row{display:flex;align-items:center;gap:22px;font:700 44px/1.15 Inter;background:var(--card);border-radius:20px;padding:26px 30px;text-align:left;border:3px solid var(--line)}
+.vs .row.no{color:#9aa1ad}
+.vs .row.si{border-color:var(--lime)}
+.vs .tag{flex:none;font:32px Anton;padding:8px 16px;border-radius:10px;background:var(--bad);color:#fff;letter-spacing:.03em}
+.vs .si .tag{background:var(--lime);color:#0A0C10}
+.levels{width:100%;display:flex;flex-direction:column;gap:22px}
+.lvl{border-radius:22px;padding:26px 30px;background:var(--card);border:3px solid var(--line);text-align:left}
+.lvl h4{font:800 26px Inter;letter-spacing:.14em;color:var(--lime);margin-bottom:10px}
+.lvl p{font:700 42px/1.18 Inter}
+.lvl p em{font-style:normal;color:var(--lime)}
+.lvl.on{border-color:var(--lime)}
+.big{font:300px/0.9 Anton;color:var(--lime)}
+.bigsub{font:700 42px Inter;color:var(--mute)}
+.cta{display:flex;flex-direction:column;align-items:center;gap:22px;width:100%}
+.cta .btn{display:flex;align-items:center;gap:18px;font:800 44px Inter;padding:24px 40px;border-radius:999px;background:var(--card);border:3px solid #3a4250}
+.cta .btn em{font-style:normal;color:var(--lime)}
+.cta .btn.on{background:var(--lime);border-color:var(--lime);color:#0A0C10}
+.cta .btn.on em{color:#0A0C10;text-decoration:underline}
+.cta .ic{font-size:44px}
+.prod{position:relative;width:640px;height:640px;border-radius:30px;overflow:hidden;background:radial-gradient(circle at 50% 45%,#232a1a,#0d1014 70%);border:3px solid #2c3340}
+.prod img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.prod .sweep{position:absolute;top:-20%;bottom:-20%;width:180px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.22),rgba(255,255,255,0));transform:skewX(-18deg)}
+.prod .tagp{position:absolute;left:24px;bottom:22px;font:800 24px Inter;letter-spacing:.14em;padding:8px 16px;border-radius:8px;background:var(--lime);color:#0A0C10}
+.callouts{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin-top:6px;width:100%}
+.co{display:flex;align-items:center;gap:12px;font:700 34px Inter;padding:14px 24px;border-radius:999px;background:var(--card);border:3px solid var(--line)}
+.co:before{content:"";width:16px;height:16px;border-radius:50%;background:var(--lime)}
+.co.on{border-color:var(--lime)}
+.court{position:relative}
+.court .lab{position:absolute;font:800 26px Inter;letter-spacing:.08em;padding:8px 14px;border-radius:8px;background:var(--lime);color:#0A0C10;white-space:nowrap;transform:translate(-50%,-150%)}
+.clabel{font:700 30px Inter;color:var(--mute);letter-spacing:.06em;text-transform:uppercase}
+</style></head>
+<body>
+<svg id="bgcourt" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
+<div id="glow"></div><div id="glow2"></div><div id="vig"></div>
+<div id="prog"></div>
+<div id="brand"></div>
+<div id="stage"></div>
+<div id="wipe"></div><div id="flash"></div>
+<script>
+const D = window.DATA, S0 = D.script;
+const SPORT = {padel:'PÁDEL', basket:'BALONCESTO', tenis:'TENIS', voley:'VÓLEY', running:'RUNNING', gym:'GYM'};
+const LEVEL = {todos:'TODOS LOS NIVELES', principiante:'SI ESTÁS EMPEZANDO', avanzado:'SI YA COMPITES'};
+document.getElementById('brand').innerHTML = `<span class="w">FET<b>BULL</b></span><span class="sp">${SPORT[S0.sport] || (S0.sport||'').toUpperCase()}</span>${S0.level ? `<span class="lv">${LEVEL[S0.level] || S0.level}</span>` : ''}`;
+document.getElementById('prog').innerHTML = S0.scenes.map(() => '<div><i></i></div>').join('');
+const bars = [...document.querySelectorAll('#prog i')];
+const em = s => s.replace(/\*(.+?)\*/g, '<em>$1</em>');
+const clamp = x => Math.max(0, Math.min(1, x));
+const ease = x => 1 - Math.pow(1 - clamp(x), 3);
+const back = x => { x = clamp(x); const c = 1.7; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const lerp = (a, b, x) => a + (b - a) * x;
+
+// lineas de pista de fondo (segun deporte), muy tenues
+(function () {
+  const g = document.getElementById('bgcourt'); const c = 'rgba(200,240,49,.07)';
+  let s = `<g stroke="${c}" stroke-width="5" fill="none">`;
+  if (S0.sport === 'basket') s += `<circle cx="540" cy="1920" r="560"/><rect x="330" y="1180" width="420" height="740"/><circle cx="540" cy="1180" r="210"/><line x1="0" y1="0" x2="1080" y2="0"/><circle cx="540" cy="0" r="210"/>`;
+  else s += `<rect x="60" y="80" width="960" height="1760"/><line x1="60" y1="960" x2="1020" y2="960"/><line x1="60" y1="460" x2="1020" y2="460"/><line x1="60" y1="1460" x2="1020" y2="1460"/><line x1="540" y1="460" x2="540" y2="1460"/>`;
+  g.innerHTML = s + '</g>';
+})();
+
+// pistas dibujadas (vista cenital). Coordenadas de 'path' y 'marks' normalizadas 0..1
+function courtSVG(sport, w, h) {
+  const L = 'stroke="#3B4452" stroke-width="5" fill="none"', N = 'stroke="#C8F031" stroke-width="6"';
+  if (sport === 'basket') return `<svg width="${w}" height="${h}" viewBox="0 0 600 560"><rect x="3" y="3" width="594" height="554" rx="6" fill="#12161E" ${L}/>
+    <rect x="180" y="3" width="240" height="230" ${L}/><circle cx="300" cy="233" r="72" ${L}/><path d="M40 3 V120 A270 270 0 0 0 560 120 V3" ${L}/>
+    <line x1="255" y1="45" x2="345" y2="45" stroke="#F4F6F0" stroke-width="6"/><circle cx="300" cy="62" r="17" stroke="#FF8A3D" stroke-width="5" fill="none"/></svg>`;
+  const alleys = sport === 'tenis';
+  return `<svg width="${w}" height="${h}" viewBox="0 0 300 600"><rect x="3" y="3" width="294" height="594" rx="4" fill="#12161E" ${alleys ? L : 'stroke="#5A6577" stroke-width="7" fill="#12161E"'}/>
+    ${alleys ? `<line x1="38" y1="3" x2="38" y2="597" ${L}/><line x1="262" y1="3" x2="262" y2="597" ${L}/><line x1="38" y1="160" x2="262" y2="160" ${L}/><line x1="38" y1="440" x2="262" y2="440" ${L}/><line x1="150" y1="160" x2="150" y2="440" ${L}/>`
+      : `<line x1="3" y1="90" x2="297" y2="90" ${L}/><line x1="3" y1="510" x2="297" y2="510" ${L}/><line x1="150" y1="90" x2="150" y2="510" ${L}/>`}
+    <line x1="0" y1="300" x2="300" y2="300" ${N} stroke-dasharray="10 6"/></svg>`;
+}
+
+// ---- construir escenas ----
+const scenes = S0.scenes.map((s, i) => {
+  const T = D.timing.scenes[i];
+  const el = document.createElement('div'); el.className = 'scene'; el.style.opacity = 0;
+  let h = '';
+  if (s.kicker) h += `<div class="kicker">${em(s.kicker).split(/(<em>.*?<\/em>|\s+)/).filter(x => x && x.trim()).map(w => `<span>${w} </span>`).join('')}</div>`;
+  if (s.title) h += `<div class="title${s.title.length > 2 || s.small ? ' sm' : ''}">${s.title.map(l => `<div>${em(l)}</div>`).join('')}</div>`;
+  const z = s.zone; let court = null;
+  if (z) {
+    h += '<div class="zone">';
+    if (z.type === 'steps') h += z.items.map(it => `<div class="card it"><div class="n">${it.n}</div><div><div class="t">${it.t}</div>${it.s ? `<div class="s">${it.s}</div>` : ''}</div></div>`).join('');
+    if (z.type === 'chips') h += `<div class="chips">${z.items.map(it => `<div class="chip it">${it.t}</div>`).join('')}</div>`;
+    if (z.type === 'tip') h += `<div class="tip it">${em(z.text)}</div>`;
+    if (z.type === 'cta') h += `<div class="cta">${z.items.map(it => `<div class="btn it"><span class="ic">${{comment:'💬',save:'🔖',share:'↗',follow:'＋',link:'👟'}[it.icon] || ''}</span>${em(it.t)}</div>`).join('')}</div>`;
+    if (z.type === 'vs') h += `<div class="vs">${z.items.map(it => `<div class="row it ${it.k}"><span class="tag">${it.k === 'no' ? 'ASÍ NO' : 'ASÍ SÍ'}</span>${em(it.t)}</div>`).join('')}</div>`;
+    if (z.type === 'levels') h += `<div class="levels">${z.items.map(it => `<div class="lvl it"><h4>${it.k}</h4><p>${em(it.t)}</p></div>`).join('')}</div>`;
+    if (z.type === 'big') h += `<div class="big it">${z.text}</div><div class="bigsub it">${z.sub || ''}</div>`;
+    if (z.type === 'product') h += `<div class="prod it"><img src="../assets/product/${z.img}"><div class="sweep"></div>${z.tag ? `<div class="tagp">${z.tag}</div>` : ''}</div>` + (z.items ? `<div class="callouts">${z.items.map(it => `<div class="co it">${it.t}</div>`).join('')}</div>` : '');
+    if (z.type === 'court') {
+      const isB = z.sport === 'basket' || (!z.sport && S0.sport === 'basket');
+      const W = isB ? 600 : 300, H = isB ? 560 : 600;
+      h += `<div class="court it" style="width:${W}px;height:${H}px">${courtSVG(z.sport || S0.sport, W, H)}
+        <svg width="${W}" height="${H}" style="position:absolute;left:0;top:0"><path class="trail" fill="none" stroke="#C8F031" stroke-width="6" stroke-dasharray="14 10" stroke-linecap="round"/>
+        <circle class="pl" r="22" fill="#C8F031"/><circle class="pring" r="22" fill="none" stroke="#C8F031" stroke-width="4"/>
+        ${z.ball ? '<circle class="ball" r="11" fill="#F4F6F0"/>' : ''}</svg>
+        ${(z.marks || []).map(m => `<div class="lab mk" style="left:${m.x * W}px;top:${m.y * H}px">${m.t}</div>`).join('')}</div>${z.label ? `<div class="clabel it">${z.label}</div>` : ''}`;
+      court = { W, H, z };
+    }
+    h += '</div>';
+  }
+  el.innerHTML = h; document.getElementById('stage').appendChild(el);
+  const its = [...el.querySelectorAll('.it')];
+  const defs = z ? (z.items || []) : [];
+  let wi = 0;
+  const findWord = at => { for (let j = wi; j < T.words.length; j++) if (T.words[j][0].toLowerCase() === at.toLowerCase()) { wi = j + 1; return T.words[j][1] - 0.08; } return null; };
+  let times;
+  if (z && z.type === 'product') {
+    const t0 = z.at ? (findWord(z.at) ?? T.start + 0.5) : T.start + 0.5;
+    times = its.map((_, k) => k === 0 ? t0 : (defs[k - 1] && defs[k - 1].at ? (findWord(defs[k - 1].at) ?? t0 + 0.5 * k) : t0 + 0.6 + 0.45 * k));
+  } else {
+    times = its.map((_, k) => {
+      const at = (defs[k] || (k === 0 ? z : {}) || {}).at;
+      if (at) { const f = findWord(at); if (f !== null) return f; }
+      return T.start + 0.6 + k * 0.45;
+    });
+  }
+  // marcas de la pista
+  let mk = [];
+  if (court) { wi = 0; mk = (court.z.marks || []).map((m, k) => m.at ? (findWord(m.at) ?? T.start + 1 + k) : T.start + 1.2 + k * 0.6); }
+  return { el, s, T, its, times, court, mk, mkEl: [...el.querySelectorAll('.mk')], kick: [...el.querySelectorAll('.kicker span')], lines: [...el.querySelectorAll('.title div')] };
+});
+
+function pathAt(pts, p) { // interpolacion suave por tramos
+  if (pts.length === 1) return pts[0];
+  const segs = pts.length - 1, f = clamp(p) * segs, i = Math.min(segs - 1, Math.floor(f)), u = f - i;
+  const e = u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+  return [lerp(pts[i][0], pts[i + 1][0], e), lerp(pts[i][1], pts[i + 1][1], e)];
+}
+
+window.render = function (t) {
+  document.getElementById('glow').style.transform = `translate(${-300 + 80 * Math.sin(t * .3)}px,${-200 + 60 * Math.cos(t * .25)}px)`;
+  document.getElementById('glow2').style.transform = `translate(${500 + 60 * Math.cos(t * .2)}px,${1250 + 70 * Math.sin(t * .22)}px)`;
+  document.getElementById('bgcourt').style.transform = `scale(${1.04 + 0.02 * Math.sin(t * .2)}) translateY(${-10 * t}px)`;
+  let flash = 0, wipe = -1;
+  scenes.forEach((S, i) => {
+    const { start, end } = S.T; const last = i === scenes.length - 1;
+    bars[i].style.width = (100 * clamp((t - start) / (end - start))) + '%';
+    const a = t - start, out = last ? 0 : clamp((t - (end - 0.18)) / 0.18);
+    if (a >= -0.05 && a < 0.18) { flash = Math.max(flash, (i === 0 ? 0.9 : 0.55) * (1 - a / 0.18)); wipe = a / 0.18; }
+    const vis = t >= start - 0.05 && (t < end || last);
+    S.el.style.display = vis ? 'flex' : 'none'; if (!vis) return;
+    const punch = 1 + 0.06 * Math.exp(-Math.max(0, a) * 7);
+    S.el.style.opacity = 1 - out;
+    S.el.style.transform = `translateX(${-60 * ease(out)}px) scale(${punch})`;
+    S.kick.forEach((w, k) => { const p = clamp((a - k * 0.06) / 0.2); w.style.opacity = 0.1 + 0.9 * p; w.style.transform = `translateY(${16 * (1 - ease(p))}px)`; });
+    const k0 = Math.min(0.5, S.kick.length * 0.06);
+    S.lines.forEach((l, k) => {
+      const p = clamp((a - k0 - k * 0.1) / 0.32);
+      const sh = p > 0 && p < 1 ? 6 * Math.sin(a * 90) * (1 - p) : 0;
+      l.style.opacity = clamp(p * 2.5); l.style.transform = `translate(${sh}px,${60 * (1 - ease(p))}px) scale(${0.8 + 0.2 * back(p)})`;
+    });
+    S.its.forEach((it, k) => {
+      const p = clamp((t - S.times[k]) / 0.32);
+      it.style.opacity = clamp(p * 1.8); it.style.transform = `translateY(${50 * (1 - ease(p))}px) scale(${0.85 + 0.15 * back(p)})`;
+      const shown = S.times.map((x, j) => [x, j]).filter(x => x[0] <= t);
+      const newest = shown.length ? shown[shown.length - 1][1] : -1;
+      const tp = S.s.zone.type;
+      if (['steps', 'chips', 'cta', 'levels'].includes(tp) || it.classList.contains('co')) it.classList.toggle('on', k === newest);
+    });
+    if (S.s.zone && S.s.zone.type === 'product') {
+      const img = S.el.querySelector('.prod img'), sw = S.el.querySelector('.sweep');
+      const pa = t - S.times[0];
+      if (img) img.style.transform = `scale(${1.02 + 0.08 * clamp(pa / 4)}) rotate(${-2 + 2 * Math.sin(pa * .6)}deg)`;
+      if (sw) sw.style.left = `${-300 + 1300 * clamp((pa % 2.6) / 1.1)}px`;
+    }
+    if (S.court) {
+      const { W, H, z } = S.court; const pts = z.path.map(p => [p[0] * W, p[1] * H]);
+      const t0 = S.times[0] + 0.3, t1 = S.T.end_speech;
+      const p = clamp((t - t0) / Math.max(0.5, t1 - t0));
+      const [x, y] = pathAt(pts, p);
+      const svg = S.el.querySelectorAll('.court svg')[1];
+      svg.querySelector('.pl').setAttribute('cx', x); svg.querySelector('.pl').setAttribute('cy', y);
+      const r = 22 + 26 * ((t * 1.6) % 1);
+      svg.querySelector('.pring').setAttribute('cx', x); svg.querySelector('.pring').setAttribute('cy', y);
+      svg.querySelector('.pring').setAttribute('r', r); svg.querySelector('.pring').style.opacity = 1 - ((t * 1.6) % 1);
+      let d = ''; const n = 40; for (let j = 0; j <= n; j++) { const q = pathAt(pts, p * j / n); d += (j ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1); }
+      svg.querySelector('.trail').setAttribute('d', d);
+      const b = svg.querySelector('.ball');
+      if (b && z.ball) { const bp = pathAt(z.ball.map(q => [q[0] * W, q[1] * H]), ((t - t0) * 0.7) % 1); b.setAttribute('cx', bp[0]); b.setAttribute('cy', bp[1]); }
+      S.mkEl.forEach((m, k) => { const q = clamp((t - S.mk[k]) / 0.3); m.style.opacity = q; m.style.transform = `translate(-50%,-150%) scale(${0.6 + 0.4 * back(q)})`; });
+    }
+  });
+  document.getElementById('flash').style.opacity = flash * 0.6;
+  const w = document.getElementById('wipe');
+  if (wipe >= 0) { w.style.opacity = 1 - wipe; w.style.top = (1920 * ease(wipe) - 10) + 'px'; } else w.style.opacity = 0;
+};
+window.render(0);
+</script></body></html>

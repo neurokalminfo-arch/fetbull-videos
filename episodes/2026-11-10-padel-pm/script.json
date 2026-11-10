@@ -1,0 +1,39 @@
+{
+ "slot": "pm",
+ "sport": "padel",
+ "level": "todos",
+ "topic": "Split step en pádel: llegar antes a la bola",
+ "scenes": [
+  {"say": "¿Llegas tarde a la bola en pádel? No es el brazo. Son los pies.",
+   "kicker": "¿Llegas *tarde* a la bola?", "title": ["No es", "el brazo.", "*Son los pies*"]},
+  {"say": "Los pros hacen un saltito justo cuando el rival golpea. Es el split step.",
+   "kicker": "Lo que hacen *los pros:*", "title": ["El *split*", "step"],
+   "zone": {"type": "court", "path": [[0.5,0.68],[0.5,0.64],[0.5,0.68],[0.34,0.6]],
+            "ball": [[0.6,0.12],[0.36,0.58]],
+            "marks": [{"x":0.6,"y":0.12,"t":"RIVAL GOLPEA","at":"golpea"},{"x":0.5,"y":0.68,"t":"SALTITO","at":"saltito"}]}},
+  {"say": "Pies abiertos, saltito cuando el rival toca la bola y caes listo para salir a cualquier lado.",
+   "kicker": "Cómo *hacerlo:*", "title": ["3 pasos"],
+   "zone": {"type": "steps", "items": [
+     {"n":1,"t":"Pies abiertos","s":"A la anchura de los hombros","at":"pies"},
+     {"n":2,"t":"Saltito","s":"Cuando el rival toca la bola","at":"saltito"},
+     {"n":3,"t":"Cae y sal","s":"Listo para ir a cualquier lado","at":"caes"}]}},
+  {"say": "¿Empiezas? Hazlo solo en la red. ¿Ya compites? En cada golpe.",
+   "kicker": "Según *tu nivel:*", "title": ["Adáptalo"],
+   "zone": {"type": "levels", "items": [
+     {"k":"SI ESTÁS EMPEZANDO","t":"Hazlo solo *en la red*","at":"empiezas"},
+     {"k":"SI YA COMPITES","t":"En *cada golpe* del rival","at":"compites"}]}},
+  {"say": "Y como todo sale del apoyo, creamos FORGE: placa de carbono para el impulso y arco para la estabilidad.",
+   "kicker": "Todo sale *del apoyo*", "title": ["*FORGE*"], "small": true,
+   "zone": {"type": "product", "img": "forge-1.png", "tag": "PLANTILLA DE CARBONO", "at": "forge", "items": [
+     {"t":"Placa de carbono","at":"carbono"},
+     {"t":"Soporte de arco","at":"arco"}]}},
+  {"say": "Comenta SPLIT y te enseño cómo practicarlo. FORGE está en nuestro perfil.",
+   "kicker": "¿Quieres *el ejercicio?*", "title": ["Comenta", "*SPLIT*"],
+   "zone": {"type": "cta", "items": [
+     {"icon":"comment","t":"Comenta *SPLIT*","at":"split"},
+     {"icon":"link","t":"FORGE en el *perfil*","at":"perfil"}]}}
+ ],
+ "caption": "El saltito que separa a los que llegan de los que no 🎾⚡ Se llama split step y lo hacen todos los pros justo cuando el rival golpea.\n\n👉 Empiezas: practícalo solo en la red.\n👉 Compites: en cada golpe.\n\n¿Lo haces ya o te lo saltas? Comenta SPLIT y te enseño cómo practicarlo 👇",
+ "hashtags": ["#padel", "#padeltips", "#padelespaña", "#splitstep", "#consejospadel", "#fetbull"],
+ "tiktok_title": "El saltito que te hace llegar a todas"
+}
