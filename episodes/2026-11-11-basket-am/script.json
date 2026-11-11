@@ -1,0 +1,142 @@
+{
+ "slot": "am",
+ "sport": "basket",
+ "level": "principiante",
+ "topic": "Baloncesto: cómo caer de un salto sin cargar las rodillas (el truco del silencio)",
+ "scenes": [
+  {
+   "say": "¿Acabas con las rodillas cargadas tras jugar? No es el salto. Es cómo caes.",
+   "kicker": "¿Rodillas *cargadas* al día siguiente?",
+   "title": [
+    "No es",
+    "el salto.",
+    "*Es la caída*"
+   ]
+  },
+  {
+   "say": "Error típico: caer con las piernas rectas y las rodillas hacia dentro.",
+   "kicker": "El error *típico:*",
+   "title": [
+    "Así *no*"
+   ],
+   "zone": {
+    "type": "vs",
+    "items": [
+     {
+      "k": "no",
+      "t": "Piernas rectas, rodillas *hacia dentro*"
+     },
+     {
+      "k": "si",
+      "t": "Rodillas flexionadas, *mirando a los pies*"
+     }
+    ]
+   }
+  },
+  {
+   "say": "Cae con los dos pies, flexiona rodillas y cadera, y que apunten a la punta del pie.",
+   "kicker": "Cómo *caer bien:*",
+   "title": [
+    "3 pasos"
+   ],
+   "zone": {
+    "type": "steps",
+    "items": [
+     {
+      "n": 1,
+      "t": "Dos pies",
+      "s": "Reparte el peso en los dos",
+      "at": "dos"
+     },
+     {
+      "n": 2,
+      "t": "Flexiona",
+      "s": "Rodillas y cadera, como al sentarte",
+      "at": "flexiona"
+     },
+     {
+      "n": 3,
+      "t": "Rodillas fuera",
+      "s": "Que apunten a la punta del pie",
+      "at": "apunten"
+     }
+    ]
+   }
+  },
+  {
+   "say": "El truco: cae en silencio. Si suena fuerte, caes rígido.",
+   "kicker": "El truco que *nadie te cuenta:*",
+   "title": [
+    "Cae en",
+    "*silencio*"
+   ],
+   "zone": {
+    "type": "tip",
+    "text": "Si tu caída *suena fuerte*, estás cayendo *rígido*",
+    "at": "suena"
+   }
+  },
+  {
+   "say": "Todo empieza en el apoyo. Por eso creamos FORGE: carbono, talón con PORON y soporte de arco.",
+   "kicker": "Todo empieza *en el apoyo*",
+   "title": [
+    "*FORGE*"
+   ],
+   "small": true,
+   "zone": {
+    "type": "chips",
+    "items": [
+     {
+      "t": "Placa de carbono",
+      "at": "carbono"
+     },
+     {
+      "t": "Talón PORON®",
+      "at": "talón"
+     },
+     {
+      "t": "Soporte de arco",
+      "at": "arco"
+     }
+    ]
+   }
+  },
+  {
+   "say": "Comenta SALTO y te enseño un ejercicio para caer mejor. FORGE, en nuestro perfil.",
+   "kicker": "¿Quieres *el ejercicio?*",
+   "title": [
+    "Comenta",
+    "*SALTO*"
+   ],
+   "zone": {
+    "type": "cta",
+    "items": [
+     {
+      "icon": "comment",
+      "t": "Comenta *SALTO*",
+      "at": "salto"
+     },
+     {
+      "icon": "link",
+      "t": "FORGE en el *perfil*",
+      "at": "perfil"
+     }
+    ]
+   }
+  }
+ ],
+ "caption": "No es el salto, es cómo caes 🏀🤫\n\nEl truco más sencillo para saber si caes bien: que no se te oiga. Si tu caída suena fuerte, estás cayendo rígido.\n\n👉 Dos pies\n👉 Flexiona rodillas y cadera\n👉 Rodillas mirando a la punta del pie\n\n¿Tu caída suena o es silenciosa? Comenta SALTO y te enseño un ejercicio para caer mejor 👇",
+ "hashtags": [
+  "#baloncesto",
+  "#basket",
+  "#basketespaña",
+  "#consejosbaloncesto",
+  "#entrenamiento",
+  "#fetbull"
+ ],
+ "tiktok_title": "El truco del silencio al caer de un salto",
+ "music": {
+  "bpm": 126,
+  "key": "D"
+ }
+}

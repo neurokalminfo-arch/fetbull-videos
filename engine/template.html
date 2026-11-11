@@ -133,7 +133,7 @@ const scenes = S0.scenes.map((s, i) => {
     if (z.type === 'chips') h += `<div class="chips">${z.items.map(it => `<div class="chip it">${it.t}</div>`).join('')}</div>`;
     if (z.type === 'tip') h += `<div class="tip it">${em(z.text)}</div>`;
     if (z.type === 'cta') h += `<div class="cta">${z.items.map(it => `<div class="btn it"><span class="ic">${{comment:'💬',save:'🔖',share:'↗',follow:'＋',link:'👟'}[it.icon] || ''}</span>${em(it.t)}</div>`).join('')}</div>`;
-    if (z.type === 'vs') h += `<div class="vs">${z.items.map(it => `<div class="row it ${it.k}"><span class="tag">${it.k === 'no' ? 'ASÍ NO' : 'ASÍ SÍ'}</span>${em(it.t)}</div>`).join('')}</div>`;
+    if (z.type === 'vs') h += `<div class="vs">${z.items.map(it => `<div class="row it ${it.k}"><span class="tag">${it.k === 'no' ? 'ASÍ NO' : 'ASÍ SÍ'}</span><span>${em(it.t)}</span></div>`).join('')}</div>`;
     if (z.type === 'levels') h += `<div class="levels">${z.items.map(it => `<div class="lvl it"><h4>${it.k}</h4><p>${em(it.t)}</p></div>`).join('')}</div>`;
     if (z.type === 'big') h += `<div class="big it">${z.text}</div><div class="bigsub it">${z.sub || ''}</div>`;
     if (z.type === 'product') h += `<div class="prod it"><img src="../assets/product/${z.img}"><div class="sweep"></div>${z.tag ? `<div class="tagp">${z.tag}</div>` : ''}</div>` + (z.items ? `<div class="callouts">${z.items.map(it => `<div class="co it">${it.t}</div>`).join('')}</div>` : '');
