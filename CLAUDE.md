@@ -6,7 +6,7 @@ Hay dos ejecuciones al día: slot `am` = **10:00** y slot `pm` = **19:00** (hora
 ## Pasos de cada ejecución
 1. Lee los temas ya usados: `grep -h '"topic"' episodes/*/script.json`. No repitas tema ni gancho de los últimos 30 días.
 2. Elige deporte y nivel con la rotación (abajo) y escribe `episodes/AAAA-MM-DD-<deporte>-<slot>/script.json`.
-3. `python3 engine/tts.py <ep>` (necesita `ELEVENLABS_API_KEY`) → `python3 engine/audio.py <ep>` → `node engine/render.js <ep> --preview t1,t2,t3,t4` y **mira los fotogramas** (texto completo, nada cortado, foto del producto visible). Corrige y repite. Después `node engine/render.js <ep>`.
+3. `python3 engine/tts.py <ep>` (necesita `ELEVENLABS_API_KEY`) → `python3 engine/audio.py <ep>` → `node engine/render.js <ep> --preview t1,t2,t3,t4` y **mira los fotogramas** (texto completo, nada cortado, foto del producto visible si la hay). Corrige y repite. Después `node engine/render.js <ep>`.
 4. Borra los `prev_*.jpg`, luego `git add -A && git commit && git push origin main`. URL pública:
    `https://raw.githubusercontent.com/neurokalminfo-arch/fetbull-videos/main/episodes/<id>/final.mp4` (comprueba con curl que da 200).
 5. Programa en Metricool (`createScheduledPost`, `draft: false`, `autoPublish: true`, zona `Europe/Madrid`):
@@ -38,10 +38,10 @@ Hay dos ejecuciones al día: slot `am` = **10:00** y slot `pm` = **19:00** (hora
 - Ni porcentajes (+22 %, +13 %), ni precio ni descuentos, ni "previene lesiones", "cura", "elimina el dolor", ni ningún claim médico.
 - Ni promesas de rendimiento ("saltarás más"). Se describe lo que es y para qué está pensada.
 - Ni datos de estudios que no sean ciertos y generales. Ante la duda, sin cifra.
-- FORGE aparece en **una sola escena** (la penúltima), con foto real (`zone.type: "product"`). Si el tema es de técnica pura, el puente es "todo empieza en el apoyo" o algo similar.
+- FORGE aparece en **una sola escena** (la penúltima): con foto real (`zone.type: "product"`) si hay fotos en `assets/product/`; si no, **sin foto** con `zone.type: "chips"` y sus 2–3 rasgos reales (formato aprobado el 2026-11-11). Nunca dibujes ni generes el producto. Cierra con "FORGE, en nuestro perfil" para crear curiosidad. Si el tema es de técnica pura, el puente es "todo empieza en el apoyo" o algo similar.
 
 ## Fotos reales del producto
-En `assets/product/` (solo fotos reales de FORGE, nunca generadas). Rota la foto en cada vídeo. Si falta una foto, `render.js` se detiene: avisa en el resumen.
+En `assets/product/` (solo fotos reales de FORGE, nunca generadas). Rota la foto en cada vídeo. Si una escena `product` apunta a una foto que no existe, `render.js` se detiene. Si la carpeta está vacía, haz el vídeo sin foto (escena `chips`, ver arriba) y publícalo con normalidad; menciónalo en el resumen, sin PushNotification.
 
 ## Formato de script.json
 ```json
