@@ -1,0 +1,171 @@
+{
+ "slot": "pm",
+ "sport": "padel",
+ "level": "principiante",
+ "topic": "Pádel: ejercicio para practicar el split step en el partido de esta noche (decir YA cuando golpea el rival)",
+ "scenes": [
+  {
+   "say": "Me pedisteis cómo practicar el split step. En tu partido de esta noche, haz esto.",
+   "kicker": "Comentasteis *SPLIT*",
+   "title": [
+    "El",
+    "ejercicio",
+    "*de hoy*"
+   ]
+  },
+  {
+   "say": "Cuando el rival vaya a golpear, di ya en voz baja y haz el saltito.",
+   "kicker": "Di *YA* y salta",
+   "title": [
+    "*YA*"
+   ],
+   "zone": {
+    "type": "court",
+    "path": [
+     [
+      0.5,
+      0.7
+     ],
+     [
+      0.5,
+      0.66
+     ],
+     [
+      0.5,
+      0.7
+     ],
+     [
+      0.66,
+      0.62
+     ]
+    ],
+    "ball": [
+     [
+      0.4,
+      0.14
+     ],
+     [
+      0.64,
+      0.6
+     ]
+    ],
+    "marks": [
+     {
+      "x": 0.4,
+      "y": 0.14,
+      "t": "RIVAL GOLPEA",
+      "at": "golpear"
+     },
+     {
+      "x": 0.5,
+      "y": 0.7,
+      "t": "¡YA! + SALTITO",
+      "at": "saltito"
+     }
+    ]
+   }
+  },
+  {
+   "say": "Primero, solo en los peloteos. Luego, en la red. Y cuando te salga solo, en cada punto.",
+   "kicker": "Ve *poco a poco:*",
+   "title": [
+    "3 fases"
+   ],
+   "zone": {
+    "type": "steps",
+    "items": [
+     {
+      "n": 1,
+      "t": "Peloteo",
+      "s": "Solo al calentar",
+      "at": "peloteos"
+     },
+     {
+      "n": 2,
+      "t": "En la red",
+      "s": "Cuando subas a volear",
+      "at": "red"
+     },
+     {
+      "n": 3,
+      "t": "Cada punto",
+      "s": "Cuando te salga solo",
+      "at": "punto"
+     }
+    ]
+   }
+  },
+  {
+   "say": "La clave: salta poquito, que los pies apenas despeguen. Si saltas alto, llegas tarde.",
+   "kicker": "El error *más común:*",
+   "title": [
+    "Salta",
+    "*poquito*"
+   ],
+   "zone": {
+    "type": "tip",
+    "text": "Si saltas *alto*, llegas *tarde*",
+    "at": "alto"
+   }
+  },
+  {
+   "say": "Ese saltito sale del apoyo. Por eso creamos FORGE: placa de carbono y talón con PORON para aterrizar.",
+   "kicker": "Todo sale *del apoyo*",
+   "title": [
+    "*FORGE*"
+   ],
+   "small": true,
+   "zone": {
+    "type": "chips",
+    "items": [
+     {
+      "t": "Placa de carbono",
+      "at": "carbono"
+     },
+     {
+      "t": "Talón PORON®",
+      "at": "talón"
+     }
+    ]
+   }
+  },
+  {
+   "say": "Comenta PRIMER PASO y te enseño a salir hacia la bola. FORGE, en nuestro perfil.",
+   "kicker": "¿Quieres *el siguiente?*",
+   "title": [
+    "Comenta",
+    "*PRIMER*",
+    "*PASO*"
+   ],
+   "zone": {
+    "type": "cta",
+    "items": [
+     {
+      "icon": "comment",
+      "t": "Comenta *PRIMER PASO*",
+      "at": "paso"
+     },
+     {
+      "icon": "link",
+      "t": "FORGE en el *perfil*",
+      "at": "perfil"
+     }
+    ]
+   }
+  }
+ ],
+ "caption": "Comentasteis SPLIT, así que aquí va el ejercicio 🎾⚡\n\nEn tu partido de esta noche: cuando el rival vaya a golpear, di \"ya\" en voz baja y haz el saltito.\n\n👉 Primero, solo en los peloteos\n👉 Luego, en la red\n👉 Y cuando te salga solo, en cada punto\n\nY salta poquito: si saltas alto, llegas tarde.\n\n¿Lo pruebas hoy? Comenta PRIMER PASO y te enseño a salir hacia la bola 👇",
+ "hashtags": [
+  "#padel",
+  "#padeltips",
+  "#padelespaña",
+  "#splitstep",
+  "#consejospadel",
+  "#fetbull"
+ ],
+ "tiktok_title": "Cómo practicar el split step esta noche",
+ "music": {
+  "bpm": 122,
+  "key": "F"
+ }
+}
