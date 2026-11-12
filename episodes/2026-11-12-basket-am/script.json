@@ -1,0 +1,139 @@
+{
+ "slot": "am",
+ "sport": "basket",
+ "level": "todos",
+ "topic": "Baloncesto: ejercicio 'salta y congela' para aprender a caer (respuesta a SALTO)",
+ "scenes": [
+  {
+   "say": "Comentasteis SALTO. Aquí va el ejercicio para caer mejor. Hazlo hoy al calentar.",
+   "kicker": "Comentasteis *SALTO*",
+   "title": [
+    "Salta y",
+    "*congela*"
+   ]
+  },
+  {
+   "say": "Salta en el sitio, cae con los dos pies y congélate dos segundos, con las rodillas mirando al pie.",
+   "kicker": "El *ejercicio:*",
+   "title": [
+    "3 pasos"
+   ],
+   "zone": {
+    "type": "steps",
+    "items": [
+     {
+      "n": 1,
+      "t": "Salta",
+      "s": "En el sitio, sin correr",
+      "at": "sitio"
+     },
+     {
+      "n": 2,
+      "t": "Congela",
+      "s": "Dos segundos quieto",
+      "at": "congélate"
+     },
+     {
+      "n": 3,
+      "t": "Rodillas",
+      "s": "Mirando a la punta del pie",
+      "at": "rodillas"
+     }
+    ]
+   }
+  },
+  {
+   "say": "Si te tambaleas, repite. Cuando caigas quieto y en silencio, lo tienes.",
+   "kicker": "Cómo saber *si lo haces bien:*",
+   "title": [
+    "Quieto y",
+    "*en silencio*"
+   ],
+   "zone": {
+    "type": "tip",
+    "text": "Si te *tambaleas*, *repite*",
+    "at": "tambaleas"
+   }
+  },
+  {
+   "say": "¿Empiezas? Cinco saltos suaves. ¿Ya compites? Cae a una pierna o tras un giro.",
+   "kicker": "Según *tu nivel:*",
+   "title": [
+    "Adáptalo"
+   ],
+   "zone": {
+    "type": "levels",
+    "items": [
+     {
+      "k": "SI ESTÁS EMPEZANDO",
+      "t": "*5 saltos* suaves",
+      "at": "Empiezas"
+     },
+     {
+      "k": "SI YA COMPITES",
+      "t": "Cae a *una pierna* o tras un giro",
+      "at": "compites"
+     }
+    ]
+   }
+  },
+  {
+   "say": "Todo empieza en el apoyo. Por eso creamos FORGE: talón con PORON y soporte de arco.",
+   "kicker": "Todo empieza *en el apoyo*",
+   "title": [
+    "*FORGE*"
+   ],
+   "small": true,
+   "zone": {
+    "type": "chips",
+    "items": [
+     {
+      "t": "Talón PORON®",
+      "at": "talón"
+     },
+     {
+      "t": "Soporte de arco",
+      "at": "arco"
+     }
+    ]
+   }
+  },
+  {
+   "say": "Comenta GEMELOS y te enseño a calentarlos antes de jugar. FORGE, en nuestro perfil.",
+   "kicker": "¿Quieres *el siguiente?*",
+   "title": [
+    "Comenta",
+    "*GEMELOS*"
+   ],
+   "zone": {
+    "type": "cta",
+    "items": [
+     {
+      "icon": "comment",
+      "t": "Comenta *GEMELOS*",
+      "at": "GEMELOS"
+     },
+     {
+      "icon": "link",
+      "t": "FORGE en el *perfil*",
+      "at": "perfil"
+     }
+    ]
+   }
+  }
+ ],
+ "caption": "Comentasteis SALTO, así que aquí va el ejercicio 🏀🧊\n\nSalta y congela: hazlo hoy al calentar.\n\n👉 Salta en el sitio\n👉 Cae con los dos pies y quédate quieto dos segundos\n👉 Rodillas mirando a la punta del pie\n\nSi te tambaleas, repite. Cuando caigas quieto y en silencio, lo tienes.\n\n¿Empiezas? 5 saltos suaves. ¿Ya compites? Cae a una pierna o tras un giro.\n\n¿Lo pruebas hoy? Comenta GEMELOS y te enseño a calentarlos antes de jugar 👇",
+ "hashtags": [
+  "#baloncesto",
+  "#basket",
+  "#basketespaña",
+  "#consejosbaloncesto",
+  "#calentamiento",
+  "#fetbull"
+ ],
+ "tiktok_title": "Salta y congela: el ejercicio para caer mejor",
+ "music": {
+  "bpm": 130,
+  "key": "G"
+ }
+}
