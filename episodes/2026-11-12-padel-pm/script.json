@@ -1,0 +1,175 @@
+{
+ "slot": "pm",
+ "sport": "padel",
+ "level": "principiante",
+ "topic": "Pádel: el primer paso tras el split step para salir hacia la bola (abrir el pie y empujar; respuesta a PRIMER PASO)",
+ "scenes": [
+  {
+   "say": "Comentasteis PRIMER PASO. Haces el split step, pero sales tarde. Mira por qué.",
+   "kicker": "Comentasteis *PRIMER PASO*",
+   "title": [
+    "¿Sales",
+    "*tarde?*"
+   ]
+  },
+  {
+   "say": "Al caer del saltito, abre el pie del lado de la bola y empuja con el otro.",
+   "kicker": "Abre y *empuja*",
+   "title": [
+    "Abre",
+    "*el pie*"
+   ],
+   "zone": {
+    "type": "court",
+    "path": [
+     [
+      0.5,
+      0.72
+     ],
+     [
+      0.5,
+      0.69
+     ],
+     [
+      0.5,
+      0.72
+     ],
+     [
+      0.56,
+      0.7
+     ],
+     [
+      0.74,
+      0.66
+     ]
+    ],
+    "ball": [
+     [
+      0.35,
+      0.15
+     ],
+     [
+      0.76,
+      0.64
+     ]
+    ],
+    "marks": [
+     {
+      "x": 0.4,
+      "y": 0.8,
+      "t": "ABRE EL PIE",
+      "at": "abre"
+     },
+     {
+      "x": 0.74,
+      "y": 0.58,
+      "t": "EMPUJA",
+      "at": "empuja"
+     }
+    ]
+   }
+  },
+  {
+   "say": "Cae sobre la parte delantera del pie. Abre ese pie. Primer paso, corto y rápido.",
+   "kicker": "En *3 pasos:*",
+   "title": [
+    "Sal",
+    "*rápido*"
+   ],
+   "zone": {
+    "type": "steps",
+    "items": [
+     {
+      "n": 1,
+      "t": "Cae delante",
+      "s": "Sobre la parte delantera del pie",
+      "at": "delantera"
+     },
+     {
+      "n": 2,
+      "t": "Abre el pie",
+      "s": "El del lado de la bola",
+      "at": "Abre"
+     },
+     {
+      "n": 3,
+      "t": "Paso corto",
+      "s": "Corto y rápido",
+      "at": "corto"
+     }
+    ]
+   }
+  },
+  {
+   "say": "El error típico: dar un pasito atrás antes de salir. Tiempo perdido.",
+   "kicker": "El error *más común:*",
+   "title": [
+    "Sin paso",
+    "*atrás*"
+   ],
+   "zone": {
+    "type": "tip",
+    "text": "Pasito atrás = *tiempo perdido*",
+    "at": "atrás"
+   }
+  },
+  {
+   "say": "Ese empuje sale del apoyo. Por eso creamos FORGE: placa de carbono y soporte de arco para los giros.",
+   "kicker": "Todo sale *del apoyo*",
+   "title": [
+    "*FORGE*"
+   ],
+   "small": true,
+   "zone": {
+    "type": "chips",
+    "items": [
+     {
+      "t": "Placa de carbono",
+      "at": "carbono"
+     },
+     {
+      "t": "Soporte de arco",
+      "at": "arco"
+     }
+    ]
+   }
+  },
+  {
+   "say": "Comenta PALA y te enseño a prepararla a tiempo. FORGE, en nuestro perfil.",
+   "kicker": "¿Quieres *el siguiente?*",
+   "title": [
+    "Comenta",
+    "*PALA*"
+   ],
+   "zone": {
+    "type": "cta",
+    "items": [
+     {
+      "icon": "comment",
+      "t": "Comenta *PALA*",
+      "at": "PALA"
+     },
+     {
+      "icon": "link",
+      "t": "FORGE en el *perfil*",
+      "at": "perfil"
+     }
+    ]
+   }
+  }
+ ],
+ "caption": "Comentasteis PRIMER PASO, así que aquí va 🎾⚡\n\nHaces el split step… pero sales tarde. El truco está en el primer paso:\n\n👉 Cae del saltito sobre la parte delantera del pie\n👉 Abre el pie del lado de la bola\n👉 Empuja con el otro: paso corto y rápido\n\nY nada de pasito atrás antes de salir: es tiempo perdido.\n\n¿Lo pruebas en el partido de esta noche? Comenta PALA y te enseño a prepararla a tiempo 👇",
+ "hashtags": [
+  "#padel",
+  "#padeltips",
+  "#padelespaña",
+  "#splitstep",
+  "#consejospadel",
+  "#fetbull"
+ ],
+ "tiktok_title": "El primer paso para llegar a todas",
+ "music": {
+  "bpm": 120,
+  "key": "A"
+ }
+}
