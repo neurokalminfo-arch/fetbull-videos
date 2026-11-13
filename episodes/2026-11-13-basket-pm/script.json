@@ -1,0 +1,117 @@
+{
+ "slot": "pm",
+ "sport": "basket",
+ "level": "avanzado",
+ "topic": "Baloncesto: calentar gemelos y tobillos antes del partido de liga after-work (respuesta a GEMELOS)",
+ "scenes": [
+  {
+   "say": "Comentasteis GEMELOS. Si llegas al partido de esta noche directo del trabajo, tus gemelos están fríos.",
+   "kicker": "Comentasteis *GEMELOS*",
+   "title": [
+    "Gemelos",
+    "*fríos*"
+   ]
+  },
+  {
+   "say": "Antes de jugar: diez elevaciones de talón lentas, rodilla a la pared con cada pierna y saltitos de tobillo.",
+   "kicker": "Antes del *salto inicial:*",
+   "title": [
+    "3 pasos"
+   ],
+   "zone": {
+    "type": "steps",
+    "items": [
+     {
+      "n": 1,
+      "t": "Talones",
+      "s": "10 elevaciones lentas",
+      "at": "elevaciones"
+     },
+     {
+      "n": 2,
+      "t": "Rodilla a la pared",
+      "s": "Con cada pierna",
+      "at": "rodilla"
+     },
+     {
+      "n": 3,
+      "t": "Saltitos",
+      "s": "De tobillo, 20 segundos",
+      "at": "saltitos"
+     }
+    ]
+   }
+  },
+  {
+   "say": "Los saltitos, cortos y rápidos, rebotando sobre la parte delantera del pie. Eso prepara tu primer paso.",
+   "kicker": "El detalle *que marca la diferencia:*",
+   "title": [
+    "Rebota",
+    "*corto*"
+   ],
+   "zone": {
+    "type": "tip",
+    "text": "Rebota sobre la *parte delantera* del pie",
+    "at": "rebotando"
+   }
+  },
+  {
+   "say": "Todo empieza en el apoyo. Por eso creamos FORGE: placa de carbono y talón con PORON.",
+   "kicker": "Todo empieza *en el apoyo*",
+   "title": [
+    "*FORGE*"
+   ],
+   "small": true,
+   "zone": {
+    "type": "chips",
+    "items": [
+     {
+      "t": "Placa de carbono",
+      "at": "placa"
+     },
+     {
+      "t": "Talón PORON®",
+      "at": "talón"
+     }
+    ]
+   }
+  },
+  {
+   "say": "Comenta TOBILLOS y te enseño a prepararlos para los cambios de dirección. FORGE, en nuestro perfil.",
+   "kicker": "¿Quieres *el siguiente?*",
+   "title": [
+    "Comenta",
+    "*TOBILLOS*"
+   ],
+   "zone": {
+    "type": "cta",
+    "items": [
+     {
+      "icon": "comment",
+      "t": "Comenta *TOBILLOS*",
+      "at": "TOBILLOS"
+     },
+     {
+      "icon": "link",
+      "t": "FORGE en el *perfil*",
+      "at": "perfil"
+     }
+    ]
+   }
+  }
+ ],
+ "caption": "Comentasteis GEMELOS, así que aquí va 🏀🔥\n\nSi llegas al partido de esta noche directo del trabajo, tus gemelos están fríos. Antes del salto inicial:\n\n👉 10 elevaciones de talón lentas\n👉 Rodilla a la pared, con cada pierna\n👉 20 segundos de saltitos de tobillo, cortos y rápidos, sobre la parte delantera del pie\n\nEso prepara tu primer paso.\n\n¿Cómo calientas tú antes de la liga? Comenta TOBILLOS y te enseño a prepararlos para los cambios de dirección 👇",
+ "hashtags": [
+  "#baloncesto",
+  "#basket",
+  "#basketespaña",
+  "#consejosbaloncesto",
+  "#calentamiento",
+  "#fetbull"
+ ],
+ "tiktok_title": "Calienta los gemelos antes del partido",
+ "music": {
+  "bpm": 124,
+  "key": "E"
+ }
+}
