@@ -1,0 +1,173 @@
+{
+ "slot": "pm",
+ "sport": "padel",
+ "level": "principiante",
+ "topic": "Pádel: preparar la pala a tiempo, antes del bote (respuesta a PALA)",
+ "scenes": [
+  {
+   "say": "Comentasteis PALA. ¿Llegas a la bola y aun así golpeas tarde? Es la pala: la preparas tarde.",
+   "kicker": "Comentasteis *PALA*",
+   "title": [
+    "¿Golpeas",
+    "*tarde?*"
+   ]
+  },
+  {
+   "say": "El error típico: llevar la pala atrás después del bote. Hazlo mientras te mueves.",
+   "kicker": "El error *más común:*",
+   "title": [
+    "Pala",
+    "*a tiempo*"
+   ],
+   "zone": {
+    "type": "vs",
+    "items": [
+     {
+      "k": "no",
+      "t": "Pala atrás después del bote"
+     },
+     {
+      "k": "si",
+      "t": "Pala atrás mientras te mueves"
+     }
+    ]
+   }
+  },
+  {
+   "say": "En cuanto sepas hacia qué lado viene, gira los hombros, pala atrás y llega con ella lista.",
+   "kicker": "En *3 pasos:*",
+   "title": [
+    "Prepara",
+    "*antes*"
+   ],
+   "zone": {
+    "type": "steps",
+    "items": [
+     {
+      "n": 1,
+      "t": "Lee el lado",
+      "s": "¿Derecha o revés?",
+      "at": "lado"
+     },
+     {
+      "n": 2,
+      "t": "Gira los hombros",
+      "s": "La pala va atrás sola",
+      "at": "hombros"
+     },
+     {
+      "n": 3,
+      "t": "Llega lista",
+      "s": "Pala preparada antes del bote",
+      "at": "lista"
+     }
+    ]
+   }
+  },
+  {
+   "say": "Muévete y prepara a la vez: al llegar, solo te queda golpear.",
+   "kicker": "Moverte *y preparar*",
+   "title": [
+    "A la",
+    "*vez*"
+   ],
+   "zone": {
+    "type": "court",
+    "path": [
+     [
+      0.5,
+      0.72
+     ],
+     [
+      0.56,
+      0.7
+     ],
+     [
+      0.66,
+      0.67
+     ],
+     [
+      0.72,
+      0.66
+     ]
+    ],
+    "ball": [
+     [
+      0.4,
+      0.15
+     ],
+     [
+      0.74,
+      0.62
+     ]
+    ],
+    "marks": [
+     {
+      "x": 0.62,
+      "y": 0.78,
+      "t": "PALA LISTA",
+      "at": "golpear"
+     }
+    ]
+   }
+  },
+  {
+   "say": "Y el giro empieza en los pies. Por eso creamos FORGE: soporte de arco y placa de carbono.",
+   "kicker": "Todo empieza *en el apoyo*",
+   "title": [
+    "*FORGE*"
+   ],
+   "small": true,
+   "zone": {
+    "type": "chips",
+    "items": [
+     {
+      "t": "Soporte de arco",
+      "at": "arco"
+     },
+     {
+      "t": "Placa de carbono",
+      "at": "carbono"
+     }
+    ]
+   }
+  },
+  {
+   "say": "Comenta PARED y te enseño a jugar la bola de pared. FORGE, en nuestro perfil.",
+   "kicker": "¿Quieres *el siguiente?*",
+   "title": [
+    "Comenta",
+    "*PARED*"
+   ],
+   "zone": {
+    "type": "cta",
+    "items": [
+     {
+      "icon": "comment",
+      "t": "Comenta *PARED*",
+      "at": "PARED"
+     },
+     {
+      "icon": "link",
+      "t": "FORGE en el *perfil*",
+      "at": "perfil"
+     }
+    ]
+   }
+  }
+ ],
+ "caption": "Comentasteis PALA, así que aquí va 🎾⏱️\n\nLlegas a la bola… y aun así golpeas tarde. Casi siempre es porque llevas la pala atrás después del bote.\n\n👉 En cuanto sepas si viene a tu derecha o a tu revés, gira los hombros\n👉 La pala va atrás mientras te mueves, no al llegar\n👉 Llega con ella lista antes del bote: solo te queda golpear\n\n¿Lo pruebas en el partido de esta noche? Comenta PARED y te enseño a jugar la bola que sale de la pared 👇",
+ "hashtags": [
+  "#padel",
+  "#padeltips",
+  "#padelespaña",
+  "#consejospadel",
+  "#padelprincipiantes",
+  "#fetbull"
+ ],
+ "tiktok_title": "Prepara la pala antes del bote",
+ "music": {
+  "bpm": 128,
+  "key": "C"
+ }
+}
