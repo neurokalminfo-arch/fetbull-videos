@@ -1,0 +1,148 @@
+{
+ "slot": "pm",
+ "sport": "basket",
+ "level": "todos",
+ "topic": "Baloncesto: preparar los tobillos para los cambios de dirección antes del partido (respuesta a TOBILLOS)",
+ "scenes": [
+  {
+   "say": "Comentasteis TOBILLOS. ¿Cambias de dirección y el tobillo no responde? Prepáralo antes.",
+   "kicker": "Comentasteis *TOBILLOS*",
+   "title": [
+    "Tobillos",
+    "*listos*"
+   ]
+  },
+  {
+   "say": "El error típico: salir a pista sin haberte movido de lado.",
+   "kicker": "El error *más común:*",
+   "title": [
+    "Muévete",
+    "*de lado*"
+   ],
+   "zone": {
+    "type": "vs",
+    "items": [
+     {
+      "k": "no",
+      "t": "Salir a pista en frío"
+     },
+     {
+      "k": "si",
+      "t": "Moverte de lado antes"
+     }
+    ]
+   }
+  },
+  {
+   "say": "Haz círculos de tobillo, saltitos laterales y desplazamientos defensivos, con la cadera baja.",
+   "kicker": "En *3 pasos:*",
+   "title": [
+    "Antes del",
+    "*salto inicial*"
+   ],
+   "zone": {
+    "type": "steps",
+    "items": [
+     {
+      "n": 1,
+      "t": "Círculos",
+      "s": "10 por tobillo, lentos",
+      "at": "círculos"
+     },
+     {
+      "n": 2,
+      "t": "Saltitos laterales",
+      "s": "Cortos y rápidos",
+      "at": "saltitos"
+     },
+     {
+      "n": 3,
+      "t": "Defensa",
+      "s": "Cadera baja, pies separados",
+      "at": "desplazamientos"
+     }
+    ]
+   }
+  },
+  {
+   "say": "¿Empiezas? Diez saltitos de lado a lado. ¿Ya compites? Añade frenadas.",
+   "kicker": "Según *tu nivel:*",
+   "title": [
+    "Adáptalo"
+   ],
+   "zone": {
+    "type": "levels",
+    "items": [
+     {
+      "k": "SI ESTÁS EMPEZANDO",
+      "t": "*10 saltitos* de lado a lado",
+      "at": "Empiezas"
+     },
+     {
+      "k": "SI YA COMPITES",
+      "t": "Añade *frenadas* y cambios de ritmo",
+      "at": "compites"
+     }
+    ]
+   }
+  },
+  {
+   "say": "Todo cambio de dirección empieza en el apoyo. Por eso creamos FORGE: soporte de arco y talón con PORON.",
+   "kicker": "Todo empieza *en el apoyo*",
+   "title": [
+    "*FORGE*"
+   ],
+   "small": true,
+   "zone": {
+    "type": "chips",
+    "items": [
+     {
+      "t": "Soporte de arco",
+      "at": "arco"
+     },
+     {
+      "t": "Talón PORON®",
+      "at": "talón"
+     }
+    ]
+   }
+  },
+  {
+   "say": "Comenta FRENAR y te enseño a frenar sin cargar rodillas. FORGE, en nuestro perfil.",
+   "kicker": "¿Quieres *el siguiente?*",
+   "title": [
+    "Comenta",
+    "*FRENAR*"
+   ],
+   "zone": {
+    "type": "cta",
+    "items": [
+     {
+      "icon": "comment",
+      "t": "Comenta *FRENAR*",
+      "at": "FRENAR"
+     },
+     {
+      "icon": "link",
+      "t": "FORGE en el *perfil*",
+      "at": "perfil"
+     }
+    ]
+   }
+  }
+ ],
+ "caption": "Comentasteis TOBILLOS, así que aquí va 🏀⚡\n\nFrenas, cambias de dirección… y el tobillo no responde. Normal si sales a pista sin haberte movido de lado.\n\n👉 Círculos de tobillo, lentos\n👉 Saltitos laterales cortos y rápidos\n👉 Desplazamientos defensivos con la cadera baja\n\n¿Empiezas? 10 saltitos de lado a lado. ¿Ya compites? Añade frenadas y cambios de ritmo.\n\n¿Lo haces antes del partido de esta noche? Comenta FRENAR y te enseño a frenar sin cargar las rodillas 👇",
+ "hashtags": [
+  "#baloncesto",
+  "#basket",
+  "#basketespaña",
+  "#consejosbaloncesto",
+  "#tobillos",
+  "#fetbull"
+ ],
+ "tiktok_title": "Prepara los tobillos para cambiar de dirección",
+ "music": {
+  "bpm": 122,
+  "key": "E"
+ }
+}
