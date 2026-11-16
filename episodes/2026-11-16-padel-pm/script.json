@@ -1,0 +1,51 @@
+{
+ "slot": "pm",
+ "sport": "padel",
+ "level": "principiante",
+ "topic": "Pádel: cómo jugar la bola que rebota en la pared de fondo sin quedarte pegado al cristal (respuesta a PARED)",
+ "scenes": [
+  {
+   "say": "Comentasteis PARED. ¿La bola rebota en el fondo y te quedas pegado al cristal? Aquí va.",
+   "kicker": "Comentasteis *PARED*",
+   "title": ["La bola", "de *pared*"]
+  },
+  {
+   "say": "El error típico: correr hacia la pared. Te quedas sin espacio para golpear.",
+   "kicker": "El error *más común:*",
+   "title": ["No corras", "*al cristal*"],
+   "zone": {"type": "vs", "items": [
+     {"k": "no", "t": "Correr hacia el cristal"},
+     {"k": "si", "t": "Dejar espacio para golpear"}]}
+  },
+  {
+   "say": "Gírate de lado, deja que la bola rebote en el cristal y acompáñala hacia delante. Golpea cuando baje.",
+   "kicker": "En *3 pasos:*",
+   "title": ["Déjala", "*venir*"],
+   "zone": {"type": "steps", "items": [
+     {"n": 1, "t": "Gírate de lado", "s": "Hombro hacia el cristal", "at": "Gírate"},
+     {"n": 2, "t": "Deja que rebote", "s": "No la persigas", "at": "rebote"},
+     {"n": 3, "t": "Acompáñala", "s": "Sal con ella y golpea al bajar", "at": "acompáñala"}]}
+  },
+  {
+   "say": "Para salir hacia delante, todo empieza en el apoyo. Por eso creamos FORGE: placa de carbono y soporte de arco.",
+   "kicker": "Todo empieza *en el apoyo*",
+   "title": ["*FORGE*"],
+   "small": true,
+   "zone": {"type": "chips", "items": [
+     {"t": "Placa de carbono", "at": "carbono"},
+     {"t": "Soporte de arco", "at": "arco"}]}
+  },
+  {
+   "say": "Comenta GLOBO y te enseño a devolver el globo que te pasa por encima. FORGE, en nuestro perfil.",
+   "kicker": "¿Quieres *el siguiente?*",
+   "title": ["Comenta", "*GLOBO*"],
+   "zone": {"type": "cta", "items": [
+     {"icon": "comment", "t": "Comenta *GLOBO*", "at": "GLOBO"},
+     {"icon": "link", "t": "FORGE en el *perfil*", "at": "perfil"}]}
+  }
+ ],
+ "caption": "Comentasteis PARED, así que aquí va 🎾🧱\n\nLa bola rebota en el fondo… y tú ya estás pegado al cristal, sin espacio para golpear. El error es correr hacia la pared.\n\n👉 Gírate de lado, con el hombro hacia el cristal\n👉 Deja que la bola rebote, no la persigas\n👉 Acompáñala hacia delante y golpea cuando baje\n\n¿Cómo te ha ido en el partido de hoy con las bolas de pared? Comenta GLOBO y te enseño a devolver el globo que te pasa por encima 👇",
+ "hashtags": ["#padel", "#padeltips", "#padelespaña", "#consejospadel", "#padelprincipiantes", "#fetbull"],
+ "tiktok_title": "Cómo jugar la bola de pared",
+ "music": {"bpm": 126, "key": "D"}
+}
