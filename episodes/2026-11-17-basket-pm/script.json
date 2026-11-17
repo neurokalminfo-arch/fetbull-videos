@@ -1,0 +1,126 @@
+{
+ "slot": "pm",
+ "sport": "basket",
+ "level": "avanzado",
+ "topic": "Baloncesto: frenar en dos tiempos sin cargar las rodillas en el último cuarto (respuesta a FRENAR)",
+ "scenes": [
+  {
+   "say": "Comentasteis FRENAR. ¿Último cuarto, piernas cansadas y cada frenada la pagan tus rodillas?",
+   "kicker": "Comentasteis *FRENAR*",
+   "title": [
+    "Frena",
+    "*mejor*"
+   ]
+  },
+  {
+   "say": "El error típico: frenar en seco, en un paso, con la rodilla hacia dentro.",
+   "kicker": "El error *más común:*",
+   "title": [
+    "No frenes",
+    "*en seco*"
+   ],
+   "zone": {
+    "type": "vs",
+    "items": [
+     {
+      "k": "no",
+      "t": "Un paso y rodilla hacia dentro"
+     },
+     {
+      "k": "si",
+      "t": "Dos tiempos y cadera baja"
+     }
+    ]
+   }
+  },
+  {
+   "say": "Frena en dos tiempos: paso corto para soltar velocidad, cadera abajo y rodilla mirando a la punta del pie.",
+   "kicker": "En *3 pasos:*",
+   "title": [
+    "Dos",
+    "*tiempos*"
+   ],
+   "zone": {
+    "type": "steps",
+    "items": [
+     {
+      "n": 1,
+      "t": "Paso corto",
+      "s": "Suelta velocidad antes del freno",
+      "at": "corto"
+     },
+     {
+      "n": 2,
+      "t": "Cadera abajo",
+      "s": "Que frenen glúteos y muslos",
+      "at": "cadera"
+     },
+     {
+      "n": 3,
+      "t": "Rodilla alineada",
+      "s": "Mirando a la punta del pie",
+      "at": "rodilla"
+     }
+    ]
+   }
+  },
+  {
+   "say": "Cada frenada empieza en el apoyo. Por eso creamos FORGE: soporte de arco para cambiar de dirección y talón con amortiguación.",
+   "kicker": "Todo empieza *en el apoyo*",
+   "title": [
+    "*FORGE*"
+   ],
+   "small": true,
+   "zone": {
+    "type": "chips",
+    "items": [
+     {
+      "t": "Soporte de arco",
+      "at": "arco"
+     },
+     {
+      "t": "Talón PORON®",
+      "at": "amortiguación"
+     }
+    ]
+   }
+  },
+  {
+   "say": "Comenta DEFENSA y te enseño a desplazarte en defensa sin quedarte clavado. FORGE, en nuestro perfil.",
+   "kicker": "¿Quieres *el siguiente?*",
+   "title": [
+    "Comenta",
+    "*DEFENSA*"
+   ],
+   "zone": {
+    "type": "cta",
+    "items": [
+     {
+      "icon": "comment",
+      "t": "Comenta *DEFENSA*",
+      "at": "DEFENSA"
+     },
+     {
+      "icon": "link",
+      "t": "FORGE en el *perfil*",
+      "at": "perfil"
+     }
+    ]
+   }
+  }
+ ],
+ "caption": "Comentasteis FRENAR, así que aquí va 🏀🛑\n\nÚltimo cuarto, piernas cansadas… y cada frenada en seco la pagan tus rodillas. El error: frenar en un solo paso, con la rodilla hacia dentro.\n\n👉 Paso corto para soltar velocidad\n👉 Cadera abajo: que frenen glúteos y muslos\n👉 Rodilla alineada con la punta del pie\n\n¿Cómo llegaron tus piernas al último cuarto hoy? Comenta DEFENSA y te enseño a desplazarte en defensa sin quedarte clavado 👇",
+ "hashtags": [
+  "#baloncesto",
+  "#basket",
+  "#basketespaña",
+  "#consejosbaloncesto",
+  "#entrenamientobaloncesto",
+  "#fetbull"
+ ],
+ "tiktok_title": "Frena sin cargar las rodillas",
+ "music": {
+  "bpm": 122,
+  "key": "E"
+ }
+}
