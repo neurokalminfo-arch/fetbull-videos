@@ -1,0 +1,19 @@
+{
+ "template": "story.html",
+ "slot": "pm",
+ "sport": "padel",
+ "level": "todos",
+ "topic": "El muelle del pie: despertar el tendón de Aquiles con saltitos antes de jugar (estilo historia)",
+ "scenes": [
+  {"say": "¿Sabías que cada vez que saltas en la pista, tu pie funciona como un muelle?", "scene": "court", "hi": ["muelle"]},
+  {"say": "Al caer, el tendón de Aquiles se estira. Y al despegar, te devuelve esa energía.", "scene": "tendon", "hi": ["estira", "devuelve"]},
+  {"say": "Pero llegas del trabajo, sales a la pista en frío… y el muelle sigue dormido.", "scene": "office", "hi": ["frío", "dormido"]},
+  {"say": "Despiértalo: dos series de veinte saltitos, cortos, sobre la punta del pie.", "scene": "pogo", "hi": ["veinte", "punta"]},
+  {"say": "Y debajo del pie, FORGE: una placa de carbono que flexiona y recupera su forma en cada despegue.", "scene": "plate", "hi": ["FORGE", "carbono"]},
+  {"say": "Guárdalo para tu próximo partido. ¿Tú calientas los tobillos, o sales en frío?", "scene": "end", "hi": ["Guárdalo", "frío"]}
+ ],
+ "caption": "Tu pie es un muelle 🎾🌀 Al caer, el tendón de Aquiles se estira; al despegar, te devuelve la energía. Pero si sales a pista en frío, el muelle sigue dormido.\n\n👉 Antes de jugar: 2 series de 20 saltitos\n👉 Cortos, sobre la punta del pie\n👉 Rodillas casi rectas\n\nGuárdalo para tu próximo partido. ¿Tú calientas los tobillos o sales en frío? 👇",
+ "hashtags": ["#padel", "#padeltips", "#padelespaña", "#calentamiento", "#consejospadel", "#fetbull"],
+ "tiktok_title": "Tu pie es un muelle (y lo tienes dormido)",
+ "music": {"bpm": 96, "key": "D"}
+}

@@ -1,0 +1,277 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Anton;src:url(fonts/anton.woff2)}
+@font-face{font-family:Inter;src:url(fonts/inter-600.woff2);font-weight:600}
+@font-face{font-family:Inter;src:url(fonts/inter-700.woff2);font-weight:700}
+@font-face{font-family:Inter;src:url(fonts/inter-800.woff2);font-weight:800}
+*{margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#06080c}
+canvas{display:block}
+</style></head>
+<body><canvas id="c" width="1080" height="1920"></canvas>
+<script>
+// ===== Estilo "historia ilustrada" FetBull =====
+// Ilustración plana con protagonista en silueta, luz de cine, cámara que viaja entre escenas sin cortes,
+// subtítulos arriba con la palabra que suena resaltada. Cada escena es una función draw(ctx, u, S).
+const D = window.DATA, SC = D.script, TM = D.timing;
+['600 26px Inter', '700 30px Inter', '800 66px Inter', '66px Anton'].forEach(f => document.fonts.load(f));
+const cv = document.getElementById('c'), ctx = cv.getContext('2d');
+const W = 1080, H = 1920, LIME = '#C8F031', INK = '#05070a';
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const lerp = (a, b, x) => a + (b - a) * x;
+const ease = x => { x = clamp(x); return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+const eout = x => 1 - Math.pow(1 - clamp(x), 3);
+const dir = a => [Math.sin(a), Math.cos(a)];
+const R = d => d * Math.PI / 180;
+function rnd(i) { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
+
+// ---------- primitivas ----------
+function vgrad(c1, c2, y0 = 0, y1 = H) { const g = ctx.createLinearGradient(0, y0, 0, y1); g.addColorStop(0, c1); g.addColorStop(1, c2); return g; }
+function rgrad(x, y, r, c1, c2) { const g = ctx.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, c1); g.addColorStop(1, c2); return g; }
+function glowLine(x1, y1, x2, y2, col, w = 4, blur = 24) { ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = w; ctx.shadowColor = col; ctx.shadowBlur = blur; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.restore(); }
+function rrect(x, y, w, h, r) { ctx.beginPath(); ctx.roundRect(x, y, w, h, r); }
+function spring(x1, y1, x2, y2, coils, amp, col, w = 7, blur = 22) {
+  const dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy), nx = -dy / L, ny = dx / L;
+  ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.shadowColor = col; ctx.shadowBlur = blur;
+  ctx.beginPath(); const N = coils * 24;
+  for (let i = 0; i <= N; i++) { const p = i / N, s = Math.sin(p * coils * Math.PI * 2) * amp * Math.min(1, p * 8, (1 - p) * 8); const x = x1 + dx * p + nx * s, y = y1 + dy * p + ny * s; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+  ctx.stroke(); ctx.restore();
+}
+function label(txt, x, y, opts = {}) {
+  ctx.save(); ctx.font = `800 ${opts.size || 34}px Inter`; const w = ctx.measureText(txt).width + 36, h = (opts.size || 34) + 26;
+  ctx.globalAlpha *= opts.a ?? 1; ctx.translate(x, y); ctx.scale(opts.s ?? 1, opts.s ?? 1);
+  ctx.fillStyle = opts.bg || LIME; ctx.shadowColor = opts.bg || LIME; ctx.shadowBlur = opts.glow ?? 30; rrect(-w / 2, -h / 2, w, h, 12); ctx.fill();
+  ctx.shadowBlur = 0; ctx.fillStyle = opts.fg || INK; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(txt, 0, 2); ctx.restore();
+}
+function bigText(lines, x, y, size, a = 1) {
+  ctx.save(); ctx.globalAlpha *= a; ctx.font = `${size}px Anton`; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  lines.forEach((l, i) => { const isHi = l.startsWith('*'); const s = l.replace(/\*/g, ''); ctx.fillStyle = isHi ? LIME : '#F4F6F0'; if (isHi) { ctx.shadowColor = LIME; ctx.shadowBlur = 30; } else ctx.shadowBlur = 0; ctx.fillText(s, x, y + i * size * 0.98); });
+  ctx.restore();
+}
+function stars(seed, n, y1, a = 1) { ctx.save(); for (let i = 0; i < n; i++) { ctx.globalAlpha = a * (0.3 + 0.7 * rnd(seed + i)); ctx.fillStyle = '#fff'; ctx.fillRect(rnd(seed + i * 3) * W, rnd(seed + i * 7) * y1, 2.5, 2.5); } ctx.restore(); }
+
+// ---------- figura en silueta ----------
+// pose: {x,y (cadera), s (escala), tor (inclinación tronco), hb,kb,fb (pierna trasera: cadera, rodilla, tobillo), hf,kf,ff (delantera), sb,eb, sf,ef (brazos), racket}
+function figure(P, opt = {}) {
+  const s = P.s || 1, T = 205 * s, HR = 40 * s, L1 = 158 * s, L2 = 158 * s, F = 72 * s, U = 125 * s, FA = 112 * s, LW = 46 * s;
+  const hip = [P.x, P.y];
+  const td = [Math.sin(P.tor || 0), -Math.cos(P.tor || 0)];
+  const neck = [hip[0] + td[0] * T, hip[1] + td[1] * T];
+  const head = [neck[0] + td[0] * (HR + 22 * s), neck[1] + td[1] * (HR + 22 * s)];
+  const leg = (h, k, f) => { const kn = [hip[0] + dir(h)[0] * L1, hip[1] + dir(h)[1] * L1]; const an = [kn[0] + dir(h - k)[0] * L2, kn[1] + dir(h - k)[1] * L2]; const toe = [an[0] + Math.cos(f) * F, an[1] + Math.sin(f) * F]; const heel = [an[0] - Math.cos(f) * 18 * s, an[1] - Math.sin(f) * 18 * s + 8 * s]; return { kn, an, toe, heel }; };
+  const arm = (sa, ea) => { const sh = [neck[0] + td[0] * -18 * s, neck[1] + td[1] * -18 * s]; const el = [sh[0] + dir(sa)[0] * U, sh[1] + dir(sa)[1] * U]; const ha = [el[0] + dir(sa + ea)[0] * FA, el[1] + dir(sa + ea)[1] * FA]; return { sh, el, ha, a: sa + ea }; };
+  const lb = leg(P.hb, P.kb, P.fb), lf = leg(P.hf, P.kf, P.ff), ab = arm(P.sb, P.eb), af = arm(P.sf, P.ef);
+  // miembro ahusado: cuadrilátero entre dos círculos de distinto grosor
+  const limb = (a, b, w1, w2, col) => { const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1, nx = -dy / L, ny = dx / L; ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(a[0] + nx * w1 / 2, a[1] + ny * w1 / 2); ctx.lineTo(b[0] + nx * w2 / 2, b[1] + ny * w2 / 2); ctx.lineTo(b[0] - nx * w2 / 2, b[1] - ny * w2 / 2); ctx.lineTo(a[0] - nx * w1 / 2, a[1] - ny * w1 / 2); ctx.fill(); ctx.beginPath(); ctx.arc(a[0], a[1], w1 / 2, 0, 7); ctx.arc(b[0], b[1], w2 / 2, 0, 7); ctx.fill(); };
+  const legD = (l, col, e) => { limb(hip, l.kn, 66 * s + e, 44 * s + e, col); limb(l.kn, l.an, 44 * s + e, 24 * s + e, col); ctx.beginPath(); /* gemelo */ };
+  const armD = (a, col, e) => { limb(a.sh, a.el, 34 * s + e, 27 * s + e, col); limb(a.el, a.ha, 27 * s + e, 20 * s + e, col); ctx.beginPath(); ctx.arc(a.ha[0], a.ha[1], 15 * s + e / 2, 0, 7); ctx.fill(); };
+  const shoe = (l, col, e) => { ctx.fillStyle = col; const a = Math.atan2(l.toe[1] - l.an[1], l.toe[0] - l.an[0]); ctx.save(); ctx.translate(l.an[0], l.an[1]); ctx.rotate(a); ctx.beginPath(); ctx.moveTo(-30 * s - e, 18 * s + e / 2); ctx.lineTo(F + 10 * s + e, 18 * s + e / 2); ctx.quadraticCurveTo(F + 22 * s + e, 4 * s, F - 10 * s, -12 * s - e / 2); ctx.lineTo(8 * s, -20 * s - e / 2); ctx.quadraticCurveTo(-30 * s - e, -22 * s - e, -30 * s - e, 18 * s + e / 2); ctx.fill(); ctx.restore(); };
+  const torso = (col, e) => { const px = -td[1], py = td[0]; const shW = 50 * s + e / 2, hpW = 36 * s + e / 2; const sh = [neck[0] - td[0] * 14 * s, neck[1] - td[1] * 14 * s]; ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(sh[0] + px * shW, sh[1] + py * shW); ctx.quadraticCurveTo(sh[0] + px * (shW + 8 * s) + td[0] * 40 * s, sh[1] + py * (shW + 8 * s) + td[1] * 40 * s, sh[0] + px * shW * .9, sh[1] + py * shW * .9 + 0); ctx.lineTo(hip[0] + px * hpW, hip[1] + py * hpW); ctx.lineTo(hip[0] - px * hpW, hip[1] - py * hpW); ctx.lineTo(sh[0] - px * shW, sh[1] - py * shW); ctx.closePath(); ctx.fill(); const sd = [sh[0] - td[0] * 22 * s, sh[1] - td[1] * 22 * s]; ctx.beginPath(); ctx.arc(sd[0] + px * (shW - 20 * s), sd[1] + py * (shW - 20 * s), 22 * s + e / 2, 0, 7); ctx.fill(); ctx.beginPath(); ctx.arc(sd[0] - px * (shW - 20 * s), sd[1] - py * (shW - 20 * s), 22 * s + e / 2, 0, 7); ctx.fill(); limb(sh, [neck[0] + td[0] * 20 * s, neck[1] + td[1] * 20 * s], 30 * s + e, 26 * s + e, col); ctx.beginPath(); ctx.ellipse(head[0], head[1], HR * .88 + e / 2, HR + e / 2, P.tor || 0, 0, 7); ctx.fill(); };
+  const draw = (col, back, extra = 0) => {
+    armD(ab, back, extra); legD(lb, back, extra); shoe(lb, back, extra);
+    torso(col, extra);
+    legD(lf, col, extra); shoe(lf, col, extra); armD(af, col, extra);
+    if (P.racket) { ctx.save(); ctx.translate(...af.ha); ctx.rotate(-(P.racketA ?? R(-150))); ctx.fillStyle = col; rrect(-9 * s - extra / 2, -6 * s, 18 * s + extra, 70 * s, 8 * s); ctx.fill(); ctx.beginPath(); ctx.ellipse(0, 122 * s, 50 * s + extra / 2, 62 * s + extra / 2, 0, 0, 7); ctx.fill(); if (!extra) { ctx.fillStyle = 'rgba(200,240,49,.25)'; for (let i = 0; i < 9; i++) { ctx.beginPath(); ctx.arc((i % 3 - 1) * 22 * s, 100 * s + Math.floor(i / 3) * 22 * s, 4 * s, 0, 7); ctx.fill(); } } ctx.restore(); }
+  };
+  ctx.save();
+  if (opt.rim !== false) { ctx.shadowColor = opt.rim || LIME; ctx.shadowBlur = opt.blur ?? 26; draw(opt.rimCol || 'rgba(200,240,49,.55)', opt.rimCol || 'rgba(200,240,49,.35)', 7); ctx.shadowBlur = 0; }
+  draw(opt.col || INK, opt.back || '#0c1016');
+  ctx.restore();
+  return { hip, neck, head, lb, lf, ab, af };
+}
+const POSE = {
+  ready: { tor: R(14), hb: R(-14), kb: R(34), fb: R(4), hf: R(22), kf: R(40), ff: R(2), sb: R(28), eb: R(60), sf: R(38), ef: R(70) },
+  stand: { tor: R(2), hb: R(-4), kb: R(4), fb: 0, hf: R(4), kf: R(4), ff: 0, sb: R(-6), eb: R(10), sf: R(6), ef: R(12) },
+  stiff: { tor: R(0), hb: R(-2), kb: R(0), fb: 0, hf: R(2), kf: R(0), ff: 0, sb: R(-2), eb: R(4), sf: R(2), ef: R(4) },
+};
+function mix(a, b, x) { const o = {}; for (const k in a) o[k] = typeof a[k] === 'number' ? lerp(a[k], b[k] ?? a[k], x) : a[k]; return o; }
+function walk(ph) { const sw = Math.sin(ph); return { tor: R(6), hb: R(22) * -sw, kb: R(10 + 30 * Math.max(0, Math.sin(ph + 1.2))), fb: 0, hf: R(22) * sw, kf: R(10 + 30 * Math.max(0, Math.sin(ph + Math.PI + 1.2))), ff: 0, sb: R(24) * sw, eb: R(20), sf: R(24) * -sw, ef: R(20) }; }
+// salto de "muelle": ph 0..1 por rebote; devuelve {lift, pose}
+function pogo(ph, h = 70) { const air = Math.sin(Math.PI * ph); const ground = 1 - air; const p = mix(POSE.stand, { tor: R(4), hb: R(-6), kb: R(14), fb: R(6), hf: R(6), kf: R(14), ff: R(6), sb: R(20), eb: R(70), sf: R(28), ef: R(70) }, Math.pow(ground, 3)); p.fb = p.ff = R(18) * air + R(6); return { lift: air * h, pose: p, ground }; }
+
+// ---------- fondos ----------
+function nightCourt(u, tint = 0) {
+  ctx.fillStyle = vgrad('#04121a', '#0a2a30'); ctx.fillRect(0, 0, W, H);
+  stars(3, 70, 700, .6);
+  // focos
+  for (const x of [170, 910]) { ctx.fillStyle = rgrad(x, 330, 420, 'rgba(220,255,240,.30)', 'rgba(220,255,240,0)'); ctx.fillRect(0, 0, W, H); ctx.fillStyle = '#dff'; ctx.fillRect(x - 46, 316, 92, 20); glowLine(x, 340, x, 980, 'rgba(160,200,200,.25)', 6, 0); }
+  // cristales y pista
+  ctx.fillStyle = 'rgba(120,220,220,.06)'; ctx.fillRect(60, 760, 960, 600);
+  ctx.strokeStyle = 'rgba(170,240,240,.35)'; ctx.lineWidth = 4; for (let i = 0; i < 6; i++) { ctx.strokeRect(60 + i * 160, 760, 160, 600); }
+  ctx.fillStyle = vgrad('#0f4a4f', '#082a2e', 1360, 1920); ctx.fillRect(0, 1360, W, 560);
+  glowLine(0, 1362, W, 1362, 'rgba(200,240,49,.9)', 5, 20);
+  ctx.strokeStyle = 'rgba(255,255,255,.18)'; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(540, 1362); ctx.lineTo(540, 1920); ctx.moveTo(0, 1600); ctx.lineTo(W, 1600); ctx.stroke();
+  // red al fondo
+  ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(60, 1230, 960, 130); ctx.strokeStyle = 'rgba(255,255,255,.12)'; ctx.lineWidth = 2; for (let x = 60; x < 1020; x += 22) { ctx.beginPath(); ctx.moveTo(x, 1230); ctx.lineTo(x, 1360); ctx.stroke(); } glowLine(60, 1230, 1020, 1230, 'rgba(255,255,255,.7)', 4, 10);
+  if (tint) { ctx.fillStyle = `rgba(70,140,255,${.28 * tint})`; ctx.fillRect(0, 0, W, H); }
+}
+function vignette(a = .6) { ctx.fillStyle = (() => { const g = ctx.createRadialGradient(540, 960, 500, 540, 960, 1250); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, `rgba(0,0,0,${a})`); return g; })(); ctx.fillRect(0, 0, W, H); }
+
+// ---------- escenas ----------
+const SCENES = {
+  court(u, S) {
+    nightCourt(u);
+    const cyc = 1.25, ph = (u % cyc) / cyc;           // split step periódico
+    const hop = ph < .35 ? Math.sin(Math.PI * ph / .35) : 0;
+    const p = mix(POSE.ready, { ...POSE.ready, kb: R(20), kf: R(24) }, hop); p.x = 540; p.s = 1.15; p.y = 1362 - 316 * p.s - 14 - hop * 70; p.racket = true;
+    const F = figure(p);
+    // muelle bajo los pies que se comprime y estira
+    const k = S.at('muelle'); const a = clamp((u - k) / .4);
+    if (a > 0) { const c = 1 - hop; const y0 = 1362 - 8, y1 = y0 + 40 + 120 * (1 - c * .6); ctx.globalAlpha = a; spring(540, y0 + 14, 540, y1 + 20, 6, 46, LIME, 8, 30); ctx.globalAlpha = 1; label('TU PIE = MUELLE', 540, 1720, { a, s: .8 + .2 * eout(a / 1) }); }
+    // pelota cruzando
+    const bp = (u * .7) % 1; ctx.save(); ctx.fillStyle = '#e8ff7a'; ctx.shadowColor = LIME; ctx.shadowBlur = 25; ctx.beginPath(); ctx.arc(lerp(980, 160, bp), 820 + Math.sin(bp * Math.PI) * -260 + 420, 16, 0, 7); ctx.fill(); ctx.restore();
+    vignette();
+  },
+  tendon(u, S) {
+    ctx.fillStyle = vgrad('#061019', '#0b1f33'); ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = 'rgba(120,180,255,.08)'; ctx.lineWidth = 2; for (let i = 0; i < 20; i++) { ctx.beginPath(); ctx.moveTo(i * 60, 0); ctx.lineTo(i * 60, H); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0, i * 100); ctx.lineTo(W, i * 100); ctx.stroke(); }
+    // pierna gigante de lado (de rodilla a pie), ciclo caer -> despegar
+    const cyc = 2.2, ph = (u % cyc) / cyc; const land = ph < .5 ? eout(ph / .5) : 1 - ease((ph - .5) / .5); // 0 arriba, 1 apoyado/estirado
+    const lift = (1 - land) * 120;
+    const kx = 470, ky = 520 - lift, ax = 560, ay = 1250 - lift; // rodilla y tobillo
+    ctx.save(); ctx.fillStyle = INK; ctx.shadowColor = LIME; ctx.shadowBlur = 40;
+    ctx.beginPath(); ctx.moveTo(kx - 120, ky); ctx.bezierCurveTo(kx - 170, ky + 240, kx - 60, ky + 380, ax - 70, ay - 120); ctx.lineTo(ax - 80, ay + 30); // gemelo y talón
+    const toeA = R(-8 + 22 * (1 - land)); const toe = [ax + 330 * Math.cos(toeA), ay + 80 + 330 * Math.sin(toeA)];
+    ctx.quadraticCurveTo(ax - 60, ay + 110, ax + 40, ay + 115); ctx.lineTo(toe[0], toe[1] + 20); ctx.quadraticCurveTo(toe[0] + 30, toe[1] - 30, toe[0] - 20, toe[1] - 50);
+    ctx.lineTo(ax + 60, ay - 40); ctx.bezierCurveTo(ax + 40, ay - 300, kx + 120, ky + 200, kx + 90, ky); ctx.closePath(); ctx.fill(); ctx.restore();
+    // suelo
+    glowLine(0, 1365, W, 1365, 'rgba(200,240,49,.8)', 5, 20);
+    // tendón de Aquiles como muelle: se estira al apoyar
+    const top = [kx - 95, ky + 330], bot = [ax - 62, ay + 10];
+    const stretch = land; spring(top[0], top[1] - 60 * stretch, bot[0], bot[1], lerp(9, 6, stretch), lerp(26, 16, stretch), LIME, 9, 34);
+    const a1 = clamp((u - S.at('estira')) / .3), a2 = clamp((u - S.at('devuelve')) / .3);
+    if (a1 > 0) label('SE ESTIRA', 250, 1520, { a: a1, size: 38 });
+    if (a2 > 0) { label('TE DEVUELVE ENERGÍA', 600, 1640, { a: a2, size: 38 }); const up = (1 - land); for (let i = 0; i < 3; i++) { const y = 1150 - ((u * 300 + i * 120) % 360); ctx.globalAlpha = a2 * .8; glowLine(840, y, 840, y - 60, LIME, 8, 20); } ctx.globalAlpha = 1; }
+    ctx.save(); ctx.font = '700 30px Inter'; ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.textAlign = 'center'; ctx.font = '800 32px Inter'; ctx.fillText('TENDÓN', 210, (top[1] + bot[1]) / 2 - 10); ctx.fillText('DE AQUILES', 210, (top[1] + bot[1]) / 2 + 30); ctx.restore();
+    vignette(.5);
+  },
+  office(u, S) {
+    const kf = S.at('frío'), cold = clamp((u - kf + .2) / .5);
+    // oficina cálida -> pista fría
+    ctx.fillStyle = vgrad('#2a1406', '#c4651b'); ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = 'rgba(255,200,120,.10)'; for (let i = 0; i < 5; i++) ctx.fillRect(80 + i * 200, 260, 140, 520);
+    // reloj
+    const cx = 540, cy = 560, r = 150; ctx.save(); ctx.fillStyle = '#f6efe2'; ctx.shadowColor = '#ffb35c'; ctx.shadowBlur = 50; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.fill(); ctx.shadowBlur = 0;
+    ctx.strokeStyle = '#3a2a1a'; ctx.lineWidth = 6; for (let i = 0; i < 12; i++) { const a = i / 12 * 7; ctx.beginPath(); ctx.moveTo(cx + Math.cos(a) * r * .82, cy + Math.sin(a) * r * .82); ctx.lineTo(cx + Math.cos(a) * r * .92, cy + Math.sin(a) * r * .92); ctx.stroke(); }
+    const hrs = lerp(17.5, 19, ease(u / 2.2)); const ha = R((hrs % 12) * 30 - 90), ma = R(((hrs % 1) * 60) * 6 - 90);
+    ctx.lineCap = 'round'; ctx.lineWidth = 12; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(ha) * 80, cy + Math.sin(ha) * 80); ctx.stroke(); ctx.lineWidth = 8; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(ma) * 120, cy + Math.sin(ma) * 120); ctx.stroke(); ctx.restore();
+    // mesa y pantalla
+    ctx.fillStyle = '#140a04'; ctx.fillRect(120, 1180, 520, 34); ctx.fillRect(150, 1214, 24, 300); ctx.fillRect(590, 1214, 24, 300); ctx.fillRect(330, 1010, 220, 150); ctx.fillStyle = 'rgba(120,255,220,.6)'; ctx.fillRect(345, 1025, 190, 120); ctx.fillStyle = '#140a04'; ctx.fillRect(425, 1160, 30, 22);
+    ctx.fillStyle = '#1a0d05'; ctx.fillRect(0, 1514, W, 406);
+    // figura: se levanta y camina a la derecha
+    const go = clamp((u - 1.0) / 2.6); const p = mix(POSE.stand, walk(u * 7), go > 0 && go < 1 ? 1 : 0); p.x = lerp(700, 1000, ease(go)); p.s = 1.1; p.y = 1514 - 316 * 1.1 - 12; p.racket = false;
+    if (cold < 1) { ctx.save(); ctx.globalAlpha = 1; figure(p, { rim: 'rgba(255,170,90,.9)', rimCol: 'rgba(255,170,90,.5)' }); ctx.restore(); }
+    // capa fría encima
+    if (cold > 0) {
+      ctx.save(); ctx.globalAlpha = cold; nightCourt(u, 1);
+      const sp = mix(POSE.stiff, POSE.stiff, 0); sp.x = 540; sp.s = 1.15; sp.y = 1362 - 316 * sp.s - 14; sp.racket = true; figure(sp, { rim: 'rgba(140,190,255,.9)', rimCol: 'rgba(140,190,255,.45)' });
+      // muelle dormido
+      const az = clamp((u - S.at('dormido')) / .4); spring(540, 1356, 540, 1400, 6, 40, 'rgba(140,190,255,.8)', 7, 10);
+      ctx.font = '800 64px Inter'; ctx.fillStyle = `rgba(200,225,255,${az})`; for (let i = 0; i < 3; i++) { const t = (u * .8 + i * .33) % 1; ctx.globalAlpha = cold * az * (1 - t); ctx.fillText('z', 620 + t * 120 + i * 10, 1340 - t * 260 - i * 30); }
+      ctx.globalAlpha = cold; label('MUELLE DORMIDO', 540, 1720, { a: az, bg: '#8cbcff', glow: 30 });
+      ctx.restore();
+    }
+    vignette(.55);
+  },
+  pogo(u, S) {
+    ctx.fillStyle = vgrad('#0b0f08', '#1f2a0a'); ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = rgrad(540, 900, 700, 'rgba(200,240,49,.22)', 'rgba(200,240,49,0)'); ctx.fillRect(0, 0, W, H);
+    // líneas de velocidad
+    for (let i = 0; i < 14; i++) { const x = rnd(i) * W, y = ((u * 900 + rnd(i + 9) * H) % (H + 200)) - 100; ctx.globalAlpha = .18; glowLine(x, y, x, y + 140, LIME, 3, 0); } ctx.globalAlpha = 1;
+    const rate = 2.6, n = u * rate, ph = n % 1; const { lift, pose, ground } = pogo(ph, 120);
+    const p = { ...pose, x: 540, y: 1400 - 316 * 1.2 - 14 - lift, s: 1.2, racket: false };
+    const F = figure(p);
+    glowLine(80, 1400, 1000, 1400, LIME, 6, 26);
+    // contacto con la punta del pie
+    if (ground > .85) { ctx.save(); ctx.globalAlpha = (ground - .85) / .15; ctx.fillStyle = rgrad(F.lf.toe[0] - 10, 1400, 120, 'rgba(200,240,49,.9)', 'rgba(200,240,49,0)'); ctx.fillRect(F.lf.toe[0] - 140, 1300, 280, 200); ctx.restore(); }
+    // contador
+    const k20 = S.at('veinte'); const cnt = Math.min(20, Math.max(0, Math.floor((u - k20 + .3) * rate * 1.6)));
+    const a = clamp((u - k20 + .3) / .3); ctx.save(); ctx.globalAlpha = a; ctx.font = '210px Anton'; ctx.textAlign = 'center'; ctx.fillStyle = LIME; ctx.shadowColor = LIME; ctx.shadowBlur = 40; ctx.fillText(String(cnt).padStart(2, '0'), 540, 600); ctx.shadowBlur = 0; ctx.font = '800 40px Inter'; ctx.fillStyle = '#fff'; ctx.fillText('SALTITOS  ·  2 SERIES', 540, 668); ctx.restore();
+    const ap = clamp((u - S.at('punta')) / .3); if (ap > 0) label('SOBRE LA PUNTA DEL PIE', 540, 1600, { a: ap, size: 36 });
+    vignette(.55);
+  },
+  plate(u, S) {
+    ctx.fillStyle = vgrad('#05080b', '#0e1a12'); ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = 'rgba(200,240,49,.06)'; ctx.lineWidth = 2; for (let i = -20; i < 40; i++) { ctx.beginPath(); ctx.moveTo(i * 60, 0); ctx.lineTo(i * 60 + 600, H); ctx.stroke(); }
+    // zapatilla gigante de lado con rayos X
+    const cyc = 1.3, ph = (u % cyc) / cyc, push = Math.max(0, Math.sin(Math.PI * clamp((ph - .1) / .5))); // flexión en el despegue
+    const cx = 540, cy = 1060, lift = push * 40; ctx.save(); ctx.translate(cx, cy - lift); ctx.rotate(R(-push * 10));
+    // suela y upper
+    ctx.fillStyle = 'rgba(20,26,34,.92)'; ctx.strokeStyle = 'rgba(244,246,240,.55)'; ctx.lineWidth = 6;
+    ctx.beginPath(); ctx.moveTo(-430, 120); ctx.lineTo(380, 120); ctx.quadraticCurveTo(470, 110, 460, 40); ctx.quadraticCurveTo(420, -40, 250, -70); ctx.lineTo(60, -230); ctx.quadraticCurveTo(-60, -330, -250, -300); ctx.lineTo(-420, -260); ctx.quadraticCurveTo(-470, -120, -430, 120); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#e9ece6'; ctx.beginPath(); ctx.moveTo(-440, 120); ctx.lineTo(390, 120); ctx.quadraticCurveTo(480, 118, 470, 150); ctx.lineTo(-440, 160); ctx.closePath(); ctx.fill();
+    // placa de carbono (se flexiona en la punta)
+    const bend = push * 70; ctx.save(); ctx.strokeStyle = LIME; ctx.lineWidth = 14; ctx.shadowColor = LIME; ctx.shadowBlur = 40; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(-400, 92); ctx.lineTo(80, 92); ctx.quadraticCurveTo(260, 92 - bend * .3, 400, 92 - bend); ctx.stroke(); ctx.restore();
+    // trama de carbono
+    ctx.save(); ctx.globalAlpha = .5; ctx.strokeStyle = '#0b0f06'; ctx.lineWidth = 2; for (let x = -390; x < 380; x += 18) { const yy = 92 - (x > 80 ? bend * Math.pow((x - 80) / 320, 2) : 0); ctx.beginPath(); ctx.moveTo(x, yy - 6); ctx.lineTo(x + 9, yy + 6); ctx.stroke(); } ctx.restore();
+    // talón amortiguado
+    ctx.save(); ctx.fillStyle = 'rgba(140,200,255,.55)'; ctx.shadowColor = '#8cbcff'; ctx.shadowBlur = 40; ctx.beginPath(); ctx.ellipse(-330, 72, 80, 26 - push * 6, 0, 0, 7); ctx.fill(); ctx.restore();
+    ctx.restore();
+    glowLine(60, 1240, 1020, 1240, 'rgba(200,240,49,.5)', 4, 16);
+    const af = clamp((u - S.at('FORGE')) / .4), ac = clamp((u - S.at('carbono')) / .3);
+    bigText(['*FORGE'], 540, 600, 200, af);
+    if (ac > 0) { label('PLACA DE CARBONO', 760, 1360, { a: ac, size: 34 }); label('TALÓN AMORTIGUADO', 300, 1460, { a: clamp(ac - .3), size: 30, bg: '#8cbcff' }); }
+    ctx.save(); ctx.font = '600 26px Inter'; ctx.fillStyle = 'rgba(255,255,255,.45)'; ctx.textAlign = 'center'; ctx.fillText('Representación ilustrativa', 540, 1560); ctx.restore();
+    vignette(.5);
+  },
+  end(u, S) {
+    nightCourt(u);
+    const p = { ...POSE.ready, x: 540, s: 1.15, y: 1362 - 316 * 1.15 - 14, racket: true }; figure(p);
+    spring(540, 1356, 540, 1440 + 20 * Math.sin(u * 6), 6, 44, LIME, 8, 30);
+    const ag = clamp((u - S.at('Guárdalo')) / .35);
+    if (ag > 0) { ctx.save(); ctx.globalAlpha = ag; ctx.translate(540, 540); ctx.scale(.6 + .15 * eout(ag), .6 + .15 * eout(ag)); ctx.fillStyle = LIME; ctx.shadowColor = LIME; ctx.shadowBlur = 40; ctx.beginPath(); ctx.moveTo(-60, -90); ctx.lineTo(60, -90); ctx.lineTo(60, 90); ctx.lineTo(0, 45); ctx.lineTo(-60, 90); ctx.closePath(); ctx.fill(); ctx.restore(); }
+    ctx.save(); ctx.font = '48px Anton'; ctx.textAlign = 'center'; ctx.fillStyle = 'rgba(244,246,240,.9)'; ctx.letterSpacing = '10px'; ctx.fillText('FETBULL', 540, 1760); ctx.restore();
+    vignette(.55);
+  },
+};
+
+// ---------- tiempos por escena ----------
+const SS = SC.scenes.map((s, i) => {
+  const T = TM.scenes[i];
+  const at = w => { const f = T.words.find(x => x[0].toLowerCase() === w.toLowerCase()); return f ? f[1] - T.start : 0.6; };
+  return { s, T, at, draw: SCENES[s.scene] };
+});
+
+// ---------- subtítulos ----------
+function chunks(T) { const out = []; let cur = []; let len = 0; T.words.forEach((w, i) => { if (cur.length && (cur.length >= 4 || len + w[0].length > 20)) { out.push(cur); cur = []; len = 0; } cur.push(w); len += w[0].length + 1; }); if (cur.length) out.push(cur); return out; }
+SS.forEach(S => { S.ch = chunks(S.T); S.hi = (S.s.hi || []).map(x => x.toLowerCase()); });
+function captions(t) {
+  const i = SS.findIndex((S, k) => t >= S.T.start - .05 && (k === SS.length - 1 || t < SS[k + 1].T.start)); if (i < 0) return; const S = SS[i];
+  let ci = 0; S.ch.forEach((c, k) => { if (t >= c[0][1] - .05) ci = k; }); const c = S.ch[ci]; if (!c) return;
+  ctx.save(); ctx.font = '800 66px Inter'; ctx.textBaseline = 'middle';
+  const words = c.map(w => w[0]); const sp = 22; const ws = words.map(w => ctx.measureText(w).width); const tot = ws.reduce((a, b) => a + b, 0) + sp * (words.length - 1);
+  let x = 540 - tot / 2; const y = 330;
+  const age = t - c[0][1]; ctx.globalAlpha = clamp(age / .12 + .2);
+  words.forEach((w, k) => {
+    const on = t >= c[k][1] - .03 && (k === c.length - 1 || t < c[k + 1][1]); const hi = S.hi.includes(w.toLowerCase().replace(/[.,¿?¡!…:]/g, ''));
+    if (on) { ctx.fillStyle = 'rgba(10,14,20,.85)'; ctx.strokeStyle = hi ? LIME : '#fff'; ctx.lineWidth = 4; rrect(x - 12, y - 46, ws[k] + 24, 92, 14); ctx.fill(); ctx.stroke(); }
+    ctx.fillStyle = hi ? LIME : '#fff'; if (hi) { ctx.shadowColor = LIME; ctx.shadowBlur = 24; } else { ctx.shadowColor = 'rgba(0,0,0,.8)'; ctx.shadowBlur = 16; }
+    ctx.fillText(w, x, y + 3); x += ws[k] + sp;
+  });
+  ctx.restore();
+}
+
+// ---------- transiciones de cámara ----------
+const TR = { tendon: 'zoom', office: 'pan', pogo: 'pan', plate: 'down', end: 'pan' };
+window.render = function (t) {
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.shadowBlur = 0; ctx.clearRect(0, 0, W, H);
+  let i = SS.findIndex((S, k) => k === SS.length - 1 || t < SS[k + 1].T.start); if (i < 0) i = 0;
+  const S = SS[i], u = Math.max(0, t - S.T.start);
+  const TD = .55, tr = i > 0 ? clamp(u / TD) : 1;
+  const drawScene = (X, uu, fn) => { ctx.save(); fn(); X.draw(uu, X); ctx.restore(); };
+  // empuje lento de cámara dentro de cada escena
+  const push = s => { const z = 1 + .04 * clamp(s / 6); ctx.translate(540, 960); ctx.scale(z, z); ctx.translate(-540, -960); };
+  if (tr < 1) {
+    const P = SS[i - 1], pu = S.T.start - P.T.start + u, e = ease(tr), type = TR[S.s.scene] || 'pan';
+    if (type === 'pan') { drawScene(P, pu, () => { ctx.translate(0, -H * e); push(pu); }); drawScene(S, u, () => { ctx.translate(0, H * (1 - e)); push(u); }); }
+    else if (type === 'down') { drawScene(P, pu, () => { ctx.translate(0, H * e); push(pu); }); drawScene(S, u, () => { ctx.translate(0, -H * (1 - e)); push(u); }); }
+    else { const z = 1 + 3 * e; drawScene(P, pu, () => { ctx.translate(540, 1300); ctx.scale(z, z); ctx.translate(-540, -1300); }); ctx.save(); ctx.globalAlpha = e; drawScene(S, u, () => { const z2 = .7 + .3 * e; ctx.translate(540, 960); ctx.scale(z2, z2); ctx.translate(-540, -960); }); ctx.restore(); }
+  } else drawScene(S, u, () => push(u));
+  captions(t);
+  // grano sutil
+  ctx.save(); ctx.globalAlpha = .05; for (let k = 0; k < 220; k++) { ctx.fillStyle = rnd(k + Math.floor(t * 30) * 7) > .5 ? '#fff' : '#000'; ctx.fillRect(rnd(k * 3 + Math.floor(t * 30)) * W, rnd(k * 5 + Math.floor(t * 30)) * H, 3, 3); } ctx.restore();
+};
+document.fonts.load('66px Anton').then(() => window.render(0));
+</script></body></html>

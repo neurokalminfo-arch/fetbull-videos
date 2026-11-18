@@ -13,7 +13,7 @@ const FPS = 30, LEAD = 0.3, dur = timing.duration + LEAD;
   const b = await chromium.launch();
   const p = await b.newPage({ viewport: { width: 1080, height: 1920 } });
   await p.addInitScript(d => { window.DATA = d; }, { script, timing });
-  await p.goto('file://' + path.join(__dirname, 'template.html'));
+  await p.goto('file://' + path.join(__dirname, script.template || 'template.html'));
   await p.evaluate(() => Promise.all([document.fonts.ready, ...[...document.images].map(i => i.complete ? 1 : new Promise(r => { i.onload = i.onerror = r; }))]));
   const bad = await p.evaluate(() => [...document.images].filter(i => !i.naturalWidth).map(i => i.getAttribute('src')));
   if (bad.length) { console.error('FALTAN IMÁGENES:', bad.join(', ')); process.exit(1); }
