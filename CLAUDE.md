@@ -24,7 +24,8 @@ Hay dos ejecuciones al día: slot `am` = **10:00** y slot `pm` = **19:00** (hora
 - **Avanzado**: compite. Quiere detalle y credibilidad: primer paso explosivo, cambios de dirección, aterrizajes tras remate o salto, fatiga en el tercer set o el último cuarto, recuperación entre partidos.
 - Temas que conectan en cualquier nivel: errores típicos ("no es el brazo, son los pies"), mitos, lo que hacen los pros, cómo calentar, cargar menos piernas, zapatillas gastadas, saltar y caer bien (rodillas que no se van hacia dentro), tobillos en baloncesto.
 - Estructura: **gancho** de 2 s que identifique ("¿Llegas tarde a la bola?") → error/situación → **consejo concreto** (1–3 pasos) → puente natural a FORGE → **CTA de comentario**.
-- La investigación de TikTok indica que pedir un comentario concreto funciona mejor que pedir like o "sígueme". CTA = "Comenta <PALABRA> y te enseño X" (y luego se hace ese vídeo) + "FORGE en el perfil".
+- **PROHIBIDO** empezar con "Comentasteis X", "Me pedisteis…" o similar, y prohibido encadenar vídeos como "respuesta" a la CTA anterior, salvo que en Metricool haya comentarios REALES pidiendo ese tema (hasta el 2026-11-18 no hubo ninguno: decirlo era falso y además esos ganchos retenían peor). La primera frase siempre es el problema o la situación del jugador.
+- CTA final: varíala (guardar para el próximo partido, mandárselo al compañero de pádel, comentar una pregunta concreta). No prometas un vídeo siguiente.
 - Voz: segunda persona, directa, enérgica, como un entrenador que sabe y te habla claro. Español de España. Sin anglicismos innecesarios.
 
 ## FORGE: lo que SÍ se puede decir (sale de fetbull.com/products/forge)
