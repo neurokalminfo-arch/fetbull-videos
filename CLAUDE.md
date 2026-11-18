@@ -1,5 +1,25 @@
 # Fábrica diaria de vídeos FetBull
 
+## ⚠️ ESTILO ACTUAL: "historia ilustrada" (semana de prueba desde el 2026-11-18)
+Desde el 2026-11-18 TODOS los vídeos usan la plantilla `engine/story.html` (`"template": "story.html"` en script.json). El formato antiguo de texto sobre negro (template.html) está retirado: retenía muy mal (52–76 % se iba en 3 s). Referencia aprobada: `episodes/2026-11-18-padel-pm` ("Tu pie es un muelle"). De momento hay **1 vídeo al día, a las 19:00**.
+
+**Guion (25–35 s, 420–500 caracteres de voz, 5–6 escenas):**
+1. Gancho = pregunta o dato curioso que te hace imaginar algo ("¿Sabías que cada vez que saltas, tu pie funciona como un muelle?"). Nunca "Comentasteis…".
+2. Mini historia con una situación real del jugador (sale de la oficina, tercer set, vestuario, partido del domingo…).
+3. El consejo o ejercicio concreto, con series/repeticiones si aplica (seguro y general).
+4. Puente natural a FORGE con lo que hace de verdad (placa de carbono que flexiona y recupera la forma, talón amortiguado, soporte de arco). Escena con la etiqueta "Representación ilustrativa".
+5. Cierre: guardar / mandárselo al compañero + una pregunta real para comentar.
+
+**script.json:** cada escena es `{"say": "...", "scene": "<nombre>", "hi": ["palabra", ...]}` (`hi` = palabras que se resaltan en lima en los subtítulos). Mantén `"template": "story.html"`, `music` con `bpm` 90–110, y caption, hashtags y tiktok_title como siempre.
+
+**Escenas:** viven en el objeto `SCENES` de `engine/story.html`. Biblioteca actual: `court`, `tendon`, `office`, `pogo`, `plate`, `end`.
+- Cada vídeo nuevo **crea 2–3 escenas NUEVAS** para su tema (añádelas a `SCENES` con un nombre nuevo y su transición en `TR`: `pan`, `down` o `zoom`) y reutiliza como mucho 3 de la biblioteca. Que nunca se repita la misma secuencia de escenas de un vídeo anterior.
+- No cambies el aspecto de las escenas existentes (solo arreglos de errores).
+- Usa las piezas que hay: `figure()` con `POSE`/`mix`/`walk`/`pogo` (jugador en silueta con borde lima), `nightCourt`, `label`, `spring`, `glowLine`, `bigText`, `vignette`, y `S.at('palabra')` para que algo aparezca justo cuando la voz lo dice.
+- Reglas visuales: protagonista en silueta, luz de cine y un color dominante por escena (cálido/atardecer, azul frío, oscuro + lima); objetos grandes; siempre algo en movimiento; nada importante en los 300 px de abajo ni en los 150 px de la derecha (ahí van los botones de Instagram/TikTok). Los subtítulos son automáticos (arriba).
+- Nunca dibujes FORGE como si fuera una foto real: siempre esquemático y con "Representación ilustrativa".
+- Revisa al menos 8 fotogramas de prueba repartidos por todo el vídeo antes del render final.
+
 Cada ejecución crea **1 vídeo corto** (1080x1920, 25–35 s) y lo deja programado en Metricool para Instagram (@fet.bull, Reel) y TikTok (@fetbull_insole).
 Hay dos ejecuciones al día: slot `am` = **10:00** y slot `pm` = **19:00** (hora de Madrid).
 
