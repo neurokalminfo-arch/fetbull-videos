@@ -1,0 +1,18 @@
+{
+ "template": "story.html",
+ "slot": "pm",
+ "sport": "basket",
+ "level": "principiante",
+ "topic": "Baloncesto: el arco del pie es un puente; soltar la planta tras el partido after-work rodando una pelota (estilo historia)",
+ "scenes": [
+  {"say": "¿Sabías que dentro de tu pie hay un puente que aguanta cada salto?", "scene": "hoop", "hi": ["puente"]},
+  {"say": "Se llama arco. Al caer de un rebote, se aplana un poco… y vuelve a subir.", "scene": "arch", "hi": ["arco", "aplana", "subir"]},
+  {"say": "Pero tras cuarenta minutos de partido, llegas al vestuario con la planta cargada. Siéntate, pon una pelota bajo el pie y hazla rodar un minuto, del talón a los dedos.", "scene": "bench", "hi": ["cargada", "pelota", "minuto"]},
+  {"say": "Y debajo del pie, FORGE: placa de carbono que flexiona en el despegue y soporte para el arco.", "scene": "plate", "hi": ["FORGE", "carbono", "arco"]},
+  {"say": "Mándaselo a tu compañero de equipo. ¿Tú qué haces al acabar el partido?", "scene": "hoop", "cta": true, "hi": ["compañero", "acabar"]}
+ ],
+ "caption": "¿Sabías que tu pie tiene un puente por dentro? 🏀🌉 Se llama arco: al caer de un rebote se aplana un poco y vuelve a subir. Después de 40 minutos de saltos, la planta llega cargada al vestuario.\n\n👉 Siéntate y pon una pelota bajo el pie\n👉 Hazla rodar 1 minuto por pie\n👉 Del talón a los dedos, sin apretar de más\n\nMándaselo a tu compañero de equipo. ¿Tú qué haces al acabar el partido? 👇",
+ "hashtags": ["#baloncesto", "#basket", "#basketespaña", "#consejosbaloncesto", "#recuperacion", "#fetbull"],
+ "tiktok_title": "Tu pie tiene un puente (y llega cargado)",
+ "music": {"bpm": 104, "key": "F"}
+}
