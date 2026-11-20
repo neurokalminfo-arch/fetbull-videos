@@ -1,0 +1,66 @@
+{
+ "template": "story.html",
+ "slot": "pm",
+ "sport": "padel",
+ "level": "principiante",
+ "topic": "Pádel: el gemelo son dos músculos; estirar gemelo (rodilla recta) y sóleo (rodilla doblada) contra el cristal al acabar el partido after-work (estilo historia)",
+ "scenes": [
+  {
+   "say": "¿Sabías que tu gemelo son dos músculos… y casi todos estiramos solo uno?",
+   "scene": "calf",
+   "hi": [
+    "dos",
+    "uno"
+   ]
+  },
+  {
+   "say": "Acabas el partido de las ocho y, al día siguiente, bajando la escalera: el gemelo cargado.",
+   "scene": "stairs",
+   "hi": [
+    "escalera",
+    "cargado"
+   ]
+  },
+  {
+   "say": "Al salir de pista, manos en el cristal y una pierna atrás. Rodilla recta, treinta segundos. Luego dobla esa rodilla, otros treinta: así estiras el sóleo. Dos veces por pierna.",
+   "scene": "wall",
+   "hi": [
+    "recta",
+    "dobla",
+    "sóleo",
+    "treinta"
+   ]
+  },
+  {
+   "say": "Y en el apoyo, FORGE: placa de carbono que flexiona en el despegue y talón amortiguado.",
+   "scene": "plate",
+   "hi": [
+    "FORGE",
+    "carbono",
+    "talón"
+   ]
+  },
+  {
+   "say": "Guárdalo para el próximo partido. ¿Tú estiras al acabar o te vas a casa?",
+   "scene": "end",
+   "hi": [
+    "Guárdalo",
+    "estiras"
+   ]
+  }
+ ],
+ "caption": "¿Sabías que tu gemelo son dos músculos? 🎾🦵 El gemelo de arriba se estira con la rodilla recta; el sóleo, que va por debajo, con la rodilla doblada. Casi todos estiramos solo el primero.\n\n👉 Manos en el cristal, una pierna atrás\n👉 Rodilla recta: 30 segundos\n👉 Dobla esa rodilla: otros 30\n👉 Dos veces por pierna, al salir de pista\n\nGuárdalo para el próximo partido. ¿Tú estiras al acabar o te vas a casa? 👇",
+ "hashtags": [
+  "#padel",
+  "#padeltips",
+  "#padelespaña",
+  "#estiramientos",
+  "#consejospadel",
+  "#fetbull"
+ ],
+ "tiktok_title": "Tu gemelo son dos músculos (y estiras uno)",
+ "music": {
+  "bpm": 96,
+  "key": "D"
+ }
+}
