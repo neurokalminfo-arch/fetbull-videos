@@ -393,7 +393,104 @@ const SCENES = {
     const kv = S.at('veces'), av = clamp((u - kv) / .3); if (av > 0) label('2 VECES POR PIERNA', 520, 1580, { a: av, size: 34, bg: '#fff' });
     vignette(.5);
   },
+  // --- 2026-11-21 (tenis): huella del pie vista desde arriba; el día pasa de mañana a atardecer y la huella crece un poco
+  measure(u, S) {
+    const km = S.at('mañana'), kt = S.at('tarde'), kh = S.at('hincha');
+    const day = ease(clamp((u - kt + .3) / 1.6)); // 0 mañana -> 1 tarde
+    ctx.fillStyle = vgrad(day < .5 ? '#0d2236' : '#2a1006', day < .5 ? '#3b6a8a' : '#d0662a'); ctx.fillRect(0, 0, W, H);
+    ctx.save(); ctx.globalAlpha = day; ctx.fillStyle = vgrad('#2a1006', '#d0662a'); ctx.fillRect(0, 0, W, H); ctx.restore();
+    ctx.save(); ctx.globalAlpha = 1 - day; ctx.fillStyle = vgrad('#0d2236', '#4a7a96'); ctx.fillRect(0, 0, W, H); ctx.restore();
+    // sol que cruza el cielo
+    const sa = lerp(R(200), R(340), clamp(u / 4.5)); const sx = 540 + Math.cos(sa) * 400, sy = 640 + Math.sin(sa) * 200;
+    ctx.save(); ctx.fillStyle = day > .5 ? '#ffb35c' : '#fff3c4'; ctx.shadowColor = ctx.fillStyle; ctx.shadowBlur = 70; ctx.beginPath(); ctx.arc(sx, sy, 50, 0, 7); ctx.fill(); ctx.restore();
+    // reloj digital
+    const hr = Math.round(lerp(10, 20, day)); ctx.save(); ctx.font = '120px Anton'; ctx.textAlign = 'center'; ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 20; ctx.fillText(String(hr).padStart(2, '0') + ':00', 540, 620); ctx.restore();
+    // suelo
+    ctx.fillStyle = 'rgba(0,0,0,.35)'; rrect(140, 760, 800, 860, 40); ctx.fill();
+    // huella (planta vista desde arriba)
+    const sole = (sc, fill, stroke, dash) => {
+      ctx.save(); ctx.translate(480, 1255); ctx.scale(sc * .92, sc * .92);
+      ctx.beginPath(); ctx.moveTo(-70, 330); ctx.bezierCurveTo(-150, 320, -160, 200, -130, 80); ctx.bezierCurveTo(-110, -20, -180, -120, -170, -230); ctx.bezierCurveTo(-160, -330, 120, -350, 140, -230); ctx.bezierCurveTo(150, -100, 90, 40, 100, 160); ctx.bezierCurveTo(110, 300, 40, 340, -70, 330); ctx.closePath();
+      if (fill) { ctx.fillStyle = fill; ctx.shadowColor = LIME; ctx.shadowBlur = 40; ctx.fill(); ctx.shadowBlur = 0; }
+      if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 8 / sc; if (dash) ctx.setLineDash([22, 16]); ctx.stroke(); ctx.setLineDash([]); }
+      const toes = [[-130, -300, 46], [-60, -345, 34], [5, -350, 30], [60, -335, 26], [108, -305, 22]];
+      toes.forEach(([x, y, r]) => { ctx.beginPath(); ctx.arc(x, y - 40, r, 0, 7); if (fill) { ctx.fillStyle = fill; ctx.fill(); } if (stroke) { ctx.strokeStyle = stroke; if (dash) ctx.setLineDash([14, 10]); ctx.stroke(); ctx.setLineDash([]); } });
+      ctx.restore();
+    };
+    const grow = 1 + .07 * ease(clamp((u - kh + .2) / .8)) + .008 * Math.sin(u * 4);
+    sole(grow, INK, 'rgba(200,240,49,.9)');
+    const ah = clamp((u - kh) / .4);
+    if (ah > 0) sole(1, null, `rgba(255,255,255,${.85 * ah})`, true);
+    // regla a la derecha
+    ctx.save(); ctx.strokeStyle = 'rgba(255,255,255,.8)'; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(800, 780); ctx.lineTo(800, 1570); ctx.stroke(); for (let i = 0; i <= 16; i++) { const y = 780 + i * 49; ctx.beginPath(); ctx.moveTo(800, y); ctx.lineTo(i % 2 ? 830 : 850, y); ctx.stroke(); } ctx.restore();
+    const am = clamp((u - km) / .3), at = clamp((u - kt) / .3);
+    if (am > 0) label('MAÑANA', 300, 700, { a: am * (1 - at * .6), size: 34, bg: '#bfe0ff' });
+    if (at > 0) label('TARDE', 780, 700, { a: at, size: 34, bg: '#ffb35c' });
+    if (ah > 0) label('SE HINCHA UN POCO', 480, 1560, { a: ah, size: 38 });
+    vignette(.5);
+  },
+  // pista de tenis de noche en azul frío: zapatilla gigante que frena y la punta se enciende en rojo
+  squeeze(u, S) {
+    ctx.fillStyle = vgrad('#040a18', '#0b2450'); ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = rgrad(540, 300, 700, 'rgba(160,200,255,.28)', 'rgba(160,200,255,0)'); ctx.fillRect(0, 0, W, H);
+    stars(21, 50, 500, .5);
+    // pista dura azul con líneas
+    const gy = 1360; ctx.fillStyle = vgrad('#1b4f9a', '#0c2550', gy, H); ctx.fillRect(0, gy, W, H - gy); glowLine(0, gy, W, gy, 'rgba(255,255,255,.85)', 5, 16);
+    ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(540, gy); ctx.lineTo(540, H); ctx.moveTo(-200, H); ctx.lineTo(260, gy); ctx.moveTo(1280, H); ctx.lineTo(820, gy); ctx.stroke();
+    // zapatilla que llega y frena (ciclo)
+    const cyc = 1.5, ph = (u % cyc) / cyc, slide = eout(clamp(ph / .45)), brake = ph > .4 && ph < .7 ? Math.sin(Math.PI * (ph - .4) / .3) : 0;
+    const x = lerp(380, 560, slide) + Math.sin(u * 60) * 6 * brake, y = 1110;
+    ctx.save(); ctx.translate(x, y); ctx.scale(.78, .78); ctx.rotate(R(-4 * brake));
+    shoeSide();
+    // pie dentro (contorno discontinuo)
+    ctx.save(); ctx.strokeStyle = 'rgba(200,225,255,.55)'; ctx.lineWidth = 5; ctx.setLineDash([16, 12]); ctx.beginPath(); ctx.moveTo(-380, 70); ctx.quadraticCurveTo(-420, -120, -300, -200); ctx.lineTo(0, -120); ctx.quadraticCurveTo(300, -40, 400, 40); ctx.quadraticCurveTo(420, 80, 380, 90); ctx.lineTo(-380, 90); ctx.stroke(); ctx.restore();
+    const ka = S.at('aprietan'), aa = clamp((u - ka) / .3);
+    if (aa > 0) { ctx.save(); ctx.globalAlpha = aa * (.55 + .45 * brake); ctx.fillStyle = rgrad(380, 40, 170, 'rgba(255,70,50,.95)', 'rgba(255,70,50,0)'); ctx.fillRect(200, -140, 360, 360); ctx.restore(); }
+    ctx.restore();
+    // chispas de frenada
+    if (brake > .2) for (let i = 0; i < 6; i++) { ctx.globalAlpha = brake * .8; glowLine(x - 300 - i * 30, gy - 10 - rnd(i + Math.floor(u * 20)) * 30, x - 360 - i * 40, gy - 20 - rnd(i * 3 + Math.floor(u * 20)) * 50, '#bfe0ff', 4, 12); } ctx.globalAlpha = 1;
+    const kd = S.at('diez'), ko = S.at('ocho'), ad = clamp((u - kd) / .3), ao = clamp((u - ko) / .3);
+    if (ad > 0) label('SÁBADO · 10:00', 330, 620, { a: ad * (1 - .5 * ao), size: 38, bg: '#ffd27a' });
+    if (ao > 0) label('JUEVES · 20:00', 640, 720, { a: ao, size: 38, bg: '#8cbcff' });
+    if (aa > 0) label('TE APRIETAN', 540, 1540, { a: aa, size: 42, bg: '#ff5a40', fg: '#fff' });
+    vignette(.5);
+  },
+  // fondo oscuro + lima: la zapatilla bien elegida, con el dedo de margen y los cordones hasta el último ojal
+  fit(u, S) {
+    ctx.fillStyle = vgrad('#06090a', '#14200c'); ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = rgrad(540, 1000, 700, 'rgba(200,240,49,.16)', 'rgba(200,240,49,0)'); ctx.fillRect(0, 0, W, H);
+    for (let i = 0; i < 12; i++) { const yy = ((u * 120 + i * 170) % H); ctx.globalAlpha = .07; glowLine(0, yy, W, yy + 80, LIME, 2, 0); } ctx.globalAlpha = 1;
+    const kt = S.at('tarde'), kc = S.at('calcetín'), kd = S.at('margen'), ko = S.at('ojal');
+    const bob = Math.sin(u * 2.4) * 10;
+    ctx.save(); ctx.translate(500, 1080 + bob); ctx.scale(.8, .8);
+    shoeSide();
+    // calcetín: banda en el tobillo
+    const ac = clamp((u - kc) / .35);
+    if (ac > 0) { ctx.save(); ctx.globalAlpha = ac; ctx.fillStyle = '#f4f6f0'; ctx.beginPath(); ctx.moveTo(-420, -260); ctx.lineTo(-250, -300); ctx.lineTo(-240, -420); ctx.lineTo(-400, -400); ctx.closePath(); ctx.fill(); ctx.fillStyle = LIME; ctx.fillRect(-405, -410, 160, 16); ctx.restore(); }
+    // pie dentro y margen delante del dedo más largo
+    ctx.save(); ctx.strokeStyle = 'rgba(244,246,240,.6)'; ctx.lineWidth = 5; ctx.setLineDash([16, 12]); ctx.beginPath(); ctx.moveTo(-380, 70); ctx.quadraticCurveTo(-420, -120, -300, -200); ctx.lineTo(0, -120); ctx.quadraticCurveTo(220, -50, 320, 30); ctx.quadraticCurveTo(340, 80, 300, 90); ctx.lineTo(-380, 90); ctx.stroke(); ctx.restore();
+    const ad = clamp((u - kd) / .35);
+    if (ad > 0) { ctx.save(); ctx.globalAlpha = ad; ctx.strokeStyle = LIME; ctx.lineWidth = 8; ctx.shadowColor = LIME; ctx.shadowBlur = 24; const x2 = lerp(330, 430, eout(ad)); ctx.beginPath(); ctx.moveTo(330, -10); ctx.lineTo(330, 70); ctx.moveTo(330, 30); ctx.lineTo(x2, 30); ctx.moveTo(x2, -10); ctx.lineTo(x2, 70); ctx.stroke(); ctx.restore(); }
+    // cordones: zigzag entre ojales, se van atando hasta el último
+    const eye = []; for (let i = 0; i < 6; i++) { const t = i / 5; eye.push([lerp(250, 30, t), lerp(-75, -235, t)]); }
+    const kl = Math.min(kc, kd) - .2, lp = clamp((u - kl) / Math.max(.8, ko - kl + .1));
+    ctx.save(); ctx.strokeStyle = '#f4f6f0'; ctx.lineWidth = 7; ctx.lineCap = 'round'; const segs = 5 * lp; for (let i = 0; i < 5; i++) { const f = clamp(segs - i); if (f <= 0) break; const a = eye[i], b = eye[i + 1]; ctx.beginPath(); ctx.moveTo(a[0] - 30, a[1] - 14); ctx.lineTo(lerp(a[0] - 30, b[0] + 30, f), lerp(a[1] - 14, b[1] + 14, f)); ctx.moveTo(a[0] + 30, a[1] + 14); ctx.lineTo(lerp(a[0] + 30, b[0] - 30, f), lerp(a[1] + 14, b[1] - 14, f)); ctx.stroke(); } ctx.restore();
+    eye.forEach((e, i) => { const last = i === 5; const ao = last ? clamp((u - ko) / .3) : 0; ctx.save(); ctx.fillStyle = last && ao > 0 ? LIME : '#c9ccc4'; if (last && ao > 0) { ctx.shadowColor = LIME; ctx.shadowBlur = 30 + 20 * Math.sin(u * 8); } ctx.beginPath(); ctx.arc(e[0] - 30, e[1] - 14, last && ao > 0 ? 13 : 9, 0, 7); ctx.arc(e[0] + 30, e[1] + 14, last && ao > 0 ? 13 : 9, 0, 7); ctx.fill(); ctx.restore(); });
+    ctx.restore();
+    const at = clamp((u - kt) / .3), ao = clamp((u - ko) / .3);
+    if (at > 0) { ctx.save(); ctx.globalAlpha = at; ctx.fillStyle = '#ffb35c'; ctx.shadowColor = '#ffb35c'; ctx.shadowBlur = 50; ctx.beginPath(); ctx.arc(780, 560, 50, 0, 7); ctx.fill(); ctx.restore(); label('1 · POR LA TARDE', 400, 560, { a: at, size: 34, bg: '#ffb35c' }); }
+    if (ac > 0) label('2 · CON TU CALCETÍN DE JUGAR', 470, 650, { a: ac, size: 32, bg: '#f4f6f0' });
+    if (ad > 0) label('3 · UN DEDO DE MARGEN', 470, 1430, { a: ad, size: 34 });
+    if (ao > 0) label('4 · HASTA EL ÚLTIMO OJAL', 470, 1525, { a: ao, size: 34 });
+    vignette(.5);
+  },
 };
+// zapatilla de lado (punta a la derecha), centrada en el origen; la misma silueta que la escena plate
+function shoeSide() {
+  ctx.save(); ctx.fillStyle = 'rgba(20,26,34,.95)'; ctx.strokeStyle = 'rgba(244,246,240,.6)'; ctx.lineWidth = 6; ctx.shadowColor = LIME; ctx.shadowBlur = 30;
+  ctx.beginPath(); ctx.moveTo(-430, 120); ctx.lineTo(380, 120); ctx.quadraticCurveTo(470, 110, 460, 40); ctx.quadraticCurveTo(420, -40, 250, -70); ctx.lineTo(60, -230); ctx.quadraticCurveTo(-60, -330, -250, -300); ctx.lineTo(-420, -260); ctx.quadraticCurveTo(-470, -120, -430, 120); ctx.closePath(); ctx.fill(); ctx.shadowBlur = 0; ctx.stroke();
+  ctx.fillStyle = '#e9ece6'; ctx.beginPath(); ctx.moveTo(-440, 120); ctx.lineTo(390, 120); ctx.quadraticCurveTo(480, 118, 470, 150); ctx.lineTo(-440, 160); ctx.closePath(); ctx.fill(); ctx.restore();
+}
 
 // ---------- tiempos por escena ----------
 const SS = SC.scenes.map((s, i) => {
@@ -422,7 +519,7 @@ function captions(t) {
 }
 
 // ---------- transiciones de cámara ----------
-const TR = { tendon: 'zoom', office: 'pan', pogo: 'pan', plate: 'down', end: 'pan', stairs: 'pan', wall: 'zoom' };
+const TR = { tendon: 'zoom', office: 'pan', pogo: 'pan', plate: 'down', end: 'pan', stairs: 'pan', wall: 'zoom', squeeze: 'zoom', fit: 'pan' };
 window.render = function (t) {
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.shadowBlur = 0; ctx.clearRect(0, 0, W, H);
   let i = SS.findIndex((S, k) => k === SS.length - 1 || t < SS[k + 1].T.start); if (i < 0) i = 0;

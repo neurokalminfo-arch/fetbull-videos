@@ -1,0 +1,18 @@
+{
+ "template": "story.html",
+ "slot": "pm",
+ "sport": "tenis",
+ "level": "principiante",
+ "topic": "Tenis: el pie se hincha a lo largo del día; probarse las zapatillas por la tarde, con el calcetín de jugar, un dedo de margen y atadas hasta el último ojal (estilo historia)",
+ "scenes": [
+  {"say": "¿Sabías que tu pie no mide lo mismo por la mañana que por la tarde? Al final del día se hincha un poco.", "scene": "measure", "hi": ["mañana", "tarde", "hincha"]},
+  {"say": "Compraste las zapatillas un sábado a las diez. Y el jueves, en el partido de las ocho, te aprietan en cada frenada.", "scene": "squeeze", "hi": ["diez", "ocho", "aprietan"]},
+  {"say": "Pruébatelas por la tarde y con el calcetín de jugar. Deja un dedo de margen delante del dedo más largo, y átalas hasta el último ojal.", "scene": "fit", "hi": ["tarde", "calcetín", "dedo", "ojal"]},
+  {"say": "Y dentro, FORGE: placa de carbono y talón amortiguado, y se recorta a tu talla. Está en nuestro perfil.", "scene": "plate", "hi": ["FORGE", "carbono", "talón", "recorta"]},
+  {"say": "Guárdalo para tu próxima compra. ¿A qué hora te compraste las últimas?", "scene": "end", "hi": ["Guárdalo", "hora"]}
+ ],
+ "caption": "¿Sabías que tu pie no mide lo mismo por la mañana que por la tarde? 🎾👟 A lo largo del día se hincha un poco, y por eso las zapatillas que te probaste un sábado por la mañana te aprietan en el partido del jueves por la tarde.\n\n👉 Pruébatelas por la tarde\n👉 Con el calcetín con el que juegas\n👉 Un dedo de margen delante del dedo más largo\n👉 Átalas hasta el último ojal\n\nGuárdalo para tu próxima compra. ¿A qué hora te compraste las últimas? 👇",
+ "hashtags": ["#tenis", "#tenisamateur", "#zapatillasdetenis", "#consejostenis", "#tenisespaña", "#fetbull"],
+ "tiktok_title": "Tu pie no mide lo mismo por la tarde",
+ "music": {"bpm": 104, "key": "G"}
+}
