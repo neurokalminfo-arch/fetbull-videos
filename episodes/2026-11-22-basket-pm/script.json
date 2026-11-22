@@ -1,0 +1,18 @@
+{
+ "template": "story.html",
+ "slot": "pm",
+ "sport": "basket",
+ "level": "principiante",
+ "topic": "Baloncesto: la vuelta a la calma tras el partido after-work; no sentarse de golpe: caminar 5 minutos botando suave y estirar el cuádriceps (talón al glúteo) 30 s por pierna (estilo historia)",
+ "scenes": [
+  {"say": "¿Sabías que cuando suena la bocina, tus piernas siguen jugando el partido?", "scene": "buzzer", "hi": ["bocina", "piernas", "partido"]},
+  {"say": "Pero te sientas de golpe en el banquillo, coges el coche… y al día siguiente te levantas con las piernas de cartón.", "scene": "slump", "hi": ["golpe", "coche", "cartón"]},
+  {"say": "Antes de sentarte, camina cinco minutos botando suave. Luego, de pie, talón al glúteo: treinta segundos por pierna.", "scene": "cooldown", "hi": ["cinco", "minutos", "talón", "glúteo", "treinta"]},
+  {"say": "Y en la zapatilla, FORGE: placa de carbono y talón amortiguado para cada aterrizaje. En nuestro perfil.", "scene": "plate", "hi": ["FORGE", "carbono", "talón", "perfil"]},
+  {"say": "Mándaselo a tu compañero de equipo. ¿Tú te sientas nada más acabar?", "scene": "hoop", "cta": true, "hi": ["compañero", "acabar"]}
+ ],
+ "caption": "¿Sabías que cuando suena la bocina, tus piernas siguen jugando el partido? 🏀⏱️ Si te sientas de golpe y te vas directo al coche, al día siguiente te levantas con las piernas de cartón.\n\n👉 Antes de sentarte: 5 minutos caminando y botando suave\n👉 De pie, talón al glúteo\n👉 30 segundos por pierna\n\nMándaselo a tu compañero de equipo. ¿Tú te sientas nada más acabar? 👇",
+ "hashtags": ["#baloncesto", "#basket", "#basketespaña", "#consejosbaloncesto", "#vueltaalacalma", "#fetbull"],
+ "tiktok_title": "Suena la bocina… y tus piernas siguen jugando",
+ "music": {"bpm": 98, "key": "D"}
+}

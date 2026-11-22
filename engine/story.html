@@ -484,6 +484,97 @@ const SCENES = {
     if (ao > 0) label('4 · HASTA EL ÚLTIMO OJAL', 470, 1525, { a: ao, size: 34 });
     vignette(.5);
   },
+  // --- 2026-11-22 (baloncesto): suena la bocina; marcador a 0:00 en rojo cálido y las piernas del jugador siguen latiendo en lima
+  buzzer(u, S) {
+    const kb = S.at('bocina'), kp = S.at('piernas'), kt = S.at('partido');
+    ctx.fillStyle = vgrad('#1a0505', '#6a1a0a'); ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = rgrad(540, 620, 760, 'rgba(255,90,50,.35)', 'rgba(255,90,50,0)'); ctx.fillRect(0, 0, W, H);
+    // gradas
+    for (let r = 0; r < 5; r++) { ctx.fillStyle = `rgba(0,0,0,${.3 + r * .05})`; ctx.fillRect(0, 1000 + r * 70, W, 40); for (let i = 0; i < 26; i++) { ctx.globalAlpha = .22; ctx.fillStyle = '#ff9a6b'; ctx.beginPath(); ctx.arc(20 + i * 42 + (r % 2) * 20, 990 + r * 70 + Math.sin(u * 5 + i) * 3, 9, 0, 7); ctx.fill(); } ctx.globalAlpha = 1; }
+    // marcador
+    const blink = u > kb ? (Math.floor((u - kb) * 3) % 2 ? .55 : 1) : 1;
+    ctx.save(); ctx.fillStyle = '#0b0504'; ctx.strokeStyle = 'rgba(255,200,170,.6)'; ctx.lineWidth = 6; rrect(290, 430, 500, 220, 24); ctx.fill(); ctx.stroke();
+    ctx.font = '150px Anton'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.globalAlpha = blink; ctx.fillStyle = '#ff4a2a'; ctx.shadowColor = '#ff4a2a'; ctx.shadowBlur = 40;
+    const left = Math.max(0, 3 - Math.floor(u * 2)); ctx.fillText(u < kb ? '0:0' + left : '0:00', 540, 545); ctx.restore();
+    // ondas de la bocina
+    const ab = clamp((u - kb) / .2);
+    if (ab > 0) for (let k = 0; k < 3; k++) { const ph = ((u - kb) * 1.2 + k / 3) % 1; ctx.save(); ctx.globalAlpha = (1 - ph) * .8; ctx.strokeStyle = '#ffb08a'; ctx.lineWidth = 8; ctx.shadowColor = '#ff7a50'; ctx.shadowBlur = 20; ctx.beginPath(); ctx.arc(540, 540, 280 + ph * 260, R(200), R(340)); ctx.stroke(); ctx.restore(); }
+    // parqué
+    ctx.fillStyle = vgrad('#6a2a10', '#2a0e04', 1360, 1920); ctx.fillRect(0, 1360, W, 560);
+    ctx.strokeStyle = 'rgba(0,0,0,.18)'; ctx.lineWidth = 3; for (let i = 0; i < 14; i++) { ctx.beginPath(); ctx.moveTo(i * 90 - 300, 1920); ctx.lineTo(i * 90 + 100, 1362); ctx.stroke(); }
+    glowLine(0, 1362, W, 1362, 'rgba(255,160,120,.9)', 5, 20);
+    // jugador de pie, respirando fuerte, con las manos en las rodillas un instante
+    const br = Math.sin(u * 5) * .5 + .5;
+    const p = mix(POSE.stand, { tor: R(24), hb: R(-8), kb: R(22), fb: 0, hf: R(14), kf: R(22), ff: 0, sb: R(40), eb: R(-10), sf: R(48), ef: R(-12) }, .55 + .15 * br); p.x = 500; p.s = 1.0; p.y = 1362 - 316 * p.s * Math.cos(R(18)) - 14;
+    const F = figure(p, { rim: 'rgba(255,150,110,.9)', rimCol: 'rgba(255,150,110,.5)' });
+    // las piernas siguen latiendo: pulsos lima que suben por las piernas
+    const ap = clamp((u - kp) / .4);
+    if (ap > 0) { for (const l of [F.lb, F.lf]) { for (let k = 0; k < 3; k++) { const ph = ((u * 1.4) + k / 3) % 1; const x = lerp(l.an[0], l.kn[0], ph), y = lerp(l.an[1], l.kn[1], ph); ctx.save(); ctx.globalAlpha = ap * (1 - ph); ctx.strokeStyle = LIME; ctx.lineWidth = 6; ctx.shadowColor = LIME; ctx.shadowBlur = 30; ctx.beginPath(); ctx.ellipse(x, y, 40 + ph * 30, 14 + ph * 8, 0, 0, 7); ctx.stroke(); ctx.restore(); } }
+      // electro de las piernas
+      ctx.save(); ctx.globalAlpha = ap; ctx.strokeStyle = LIME; ctx.lineWidth = 6; ctx.shadowColor = LIME; ctx.shadowBlur = 24; ctx.beginPath(); for (let x = 120; x <= 900; x += 6) { const q = ((x - 120) / 160 - u * 1.5) % 1; const qq = q < 0 ? q + 1 : q; const y = 1480 - (qq > .45 && qq < .55 ? Math.sin((qq - .45) / .1 * Math.PI * 2) * 60 : 0); x === 120 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); } ctx.stroke(); ctx.restore(); }
+    const at = clamp((u - kt) / .35); if (at > 0) label('TUS PIERNAS SIGUEN JUGANDO', 500, 1580, { a: at, size: 34, s: .85 + .15 * eout(at) });
+    vignette(.55);
+  },
+  // --- 2026-11-22 (baloncesto): azul frío; se sienta de golpe en el banquillo, se va en coche y las piernas se vuelven de cartón
+  slump(u, S) {
+    const kg = S.at('golpe'), kc = S.at('coche'), kx = S.at('cartón');
+    ctx.fillStyle = vgrad('#040a16', '#0c2448'); ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = rgrad(400, 420, 760, 'rgba(120,170,255,.25)', 'rgba(120,170,255,0)'); ctx.fillRect(0, 0, W, H);
+    // pared del pabellón con ventanas altas
+    for (let i = 0; i < 5; i++) { ctx.fillStyle = 'rgba(140,190,255,.10)'; ctx.fillRect(60 + i * 200, 480, 150, 260); ctx.strokeStyle = 'rgba(140,190,255,.25)'; ctx.lineWidth = 3; ctx.strokeRect(60 + i * 200, 480, 150, 260); }
+    const gy = 1420; ctx.fillStyle = vgrad('#0a1830', '#03070f', gy, H); ctx.fillRect(0, gy, W, H - gy); glowLine(0, gy, W, gy, 'rgba(140,190,255,.6)', 4, 16);
+    // banquillo
+    ctx.fillStyle = '#1b2c48'; ctx.fillRect(90, 1150, 620, 34); ctx.fillStyle = '#0f1a2e'; ctx.fillRect(120, 1184, 26, gy - 1184); ctx.fillRect(650, 1184, 26, gy - 1184);
+    // de pie -> sentado de golpe
+    const sit = eout(clamp((u - kg + .1) / .25)); const bounce = sit >= 1 ? 0 : Math.sin(sit * Math.PI) * 10;
+    const seated = { tor: R(-8), hb: R(80), kb: R(84), fb: R(-4), hf: R(86), kf: R(86), ff: R(-4), sb: R(10), eb: R(30), sf: R(20), ef: R(30) };
+    const p = mix(POSE.stand, seated, sit); p.x = 360; p.s = 1.1; p.y = lerp(gy - 316 * 1.1 - 14, 1130, sit) + bounce;
+    const ax = clamp((u - kx) / .4);
+    const F = figure(p, { rim: 'rgba(140,190,255,.9)', rimCol: 'rgba(140,190,255,.5)' });
+    if (sit > .9) { ctx.save(); ctx.globalAlpha = clamp((sit - .9) * 10) * (1 - (u - kg) * .6 > 0 ? 1 - (u - kg) * .6 : 0); ctx.strokeStyle = '#cfe0ff'; ctx.lineWidth = 6; for (let k = -1; k <= 1; k++) { ctx.beginPath(); ctx.moveTo(360 + k * 90, 1100); ctx.lineTo(360 + k * 130, 1060); ctx.stroke(); } ctx.restore(); }
+    // coche: llaves y coche que pasa al fondo
+    const ac = clamp((u - kc) / .3);
+    if (ac > 0) { const cx = lerp(1150, 760, eout(ac)); ctx.save(); ctx.globalAlpha = ac; ctx.translate(cx, 880); ctx.fillStyle = '#0a1426'; ctx.strokeStyle = LIME; ctx.lineWidth = 6; ctx.shadowColor = LIME; ctx.shadowBlur = 24; ctx.beginPath(); ctx.moveTo(-150, 40); ctx.lineTo(-150, -10); ctx.lineTo(-90, -20); ctx.lineTo(-50, -80); ctx.lineTo(70, -80); ctx.lineTo(110, -20); ctx.lineTo(150, -10); ctx.lineTo(150, 40); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.shadowBlur = 0; for (const wx of [-90, 90]) { ctx.fillStyle = '#05070a'; ctx.beginPath(); ctx.arc(wx, 44, 30, 0, 7); ctx.fill(); ctx.stroke(); } ctx.restore(); }
+    // piernas de cartón
+    if (ax > 0) { ctx.save(); ctx.globalAlpha = ax; ctx.lineCap = 'round'; for (const l of [F.lb, F.lf]) { ctx.strokeStyle = '#b98a52'; ctx.lineWidth = 52; ctx.beginPath(); ctx.moveTo(F.hip[0], F.hip[1]); ctx.lineTo(l.kn[0], l.kn[1]); ctx.lineTo(l.an[0], l.an[1]); ctx.stroke(); ctx.strokeStyle = 'rgba(90,60,30,.7)'; ctx.lineWidth = 3; for (let k = 1; k < 6; k++) { const t = k / 6; const x = lerp(l.kn[0], l.an[0], t), y = lerp(l.kn[1], l.an[1], t); ctx.beginPath(); ctx.moveTo(x - 22, y); ctx.lineTo(x + 22, y); ctx.stroke(); } } ctx.restore();
+      label('PIERNAS DE CARTÓN', 460, 1580, { a: ax, size: 36, bg: '#d9a868', fg: '#1a1006', s: .85 + .15 * eout(ax) }); }
+    vignette(.6);
+  },
+  // --- 2026-11-22 (baloncesto): oscuro + lima; camina botando suave con un reloj de 5:00 y luego estira el cuádriceps (talón al glúteo)
+  cooldown(u, S) {
+    const k5 = S.at('cinco'), kt = S.at('talón'), k30 = S.at('treinta');
+    ctx.fillStyle = vgrad('#05080b', '#0f1a10'); ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = rgrad(540, 300, 900, 'rgba(200,240,49,.14)', 'rgba(200,240,49,0)'); ctx.fillRect(0, 0, W, H);
+    const gy = 1362; ctx.fillStyle = vgrad('#12200e', '#050805', gy, H); ctx.fillRect(0, gy, W, H - gy);
+    glowLine(0, gy, W, gy, 'rgba(200,240,49,.7)', 4, 18);
+    // zona pintada en perspectiva
+    ctx.save(); ctx.strokeStyle = 'rgba(200,240,49,.35)'; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(330, gy); ctx.lineTo(220, 1640); ctx.moveTo(750, gy); ctx.lineTo(860, 1640); ctx.moveTo(220, 1640); ctx.lineTo(860, 1640); ctx.stroke(); ctx.restore();
+    const stretch = clamp((u - kt + .15) / .35);
+    if (stretch < 1) {
+      // camina en el sitio botando suave; la pista se desliza
+      const ph = u * 5; const p = walk(ph); p.sf = R(34); p.ef = R(30); p.x = 520; p.s = 1.0; p.y = gy - 316 * p.s - 6 + Math.abs(Math.sin(ph)) * 6;
+      ctx.save(); ctx.globalAlpha = 1 - stretch;
+      ctx.strokeStyle = 'rgba(200,240,49,.25)'; ctx.lineWidth = 4; for (let i = 0; i < 8; i++) { const x = ((i * 160 - u * 220) % 1280 + 1280) % 1280 - 100; ctx.beginPath(); ctx.moveTo(x, 1480); ctx.lineTo(x + 60, 1480); ctx.stroke(); }
+      const F = figure(p);
+      const bph = (u * 2.2) % 1, by = lerp(F.af.ha[1] + 50, gy - 40, Math.sin(Math.PI * bph)); const bx = F.af.ha[0] + 10;
+      ctx.fillStyle = '#ff7a1a'; ctx.shadowColor = '#ff9a40'; ctx.shadowBlur = 24; ctx.beginPath(); ctx.arc(bx, by, 40, 0, 7); ctx.fill(); ctx.shadowBlur = 0; ctx.strokeStyle = '#2a1004'; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(bx - 40, by); ctx.lineTo(bx + 40, by); ctx.moveTo(bx, by - 40); ctx.lineTo(bx, by + 40); ctx.stroke();
+      ctx.restore();
+    }
+    if (stretch > 0) {
+      const q = { tor: R(4), hb: R(2), kb: R(2), fb: 0, hf: R(-26), kf: R(168), ff: R(-110), sb: R(75), eb: R(10), sf: R(-34), ef: R(-6) };
+      const sway = Math.sin(u * 2) * R(2); const p = mix({ ...POSE.stand }, q, eout(stretch)); p.tor += sway; p.x = 520; p.s = 1.0; p.y = gy - 316 * p.s - 14;
+      ctx.save(); ctx.globalAlpha = stretch; const F = figure(p);
+      // brillo en la parte delantera del muslo doblado
+      ctx.globalAlpha = stretch * (.5 + .3 * Math.sin(u * 4)); ctx.strokeStyle = LIME; ctx.lineWidth = 10; ctx.shadowColor = LIME; ctx.shadowBlur = 30; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(F.hip[0] + 24, F.hip[1] + 10); ctx.lineTo(F.lf.kn[0] + 26, F.lf.kn[1] - 4); ctx.stroke(); ctx.restore();
+      label('TALÓN AL GLÚTEO', 540, 1580, { a: stretch, size: 36 });
+    }
+    // reloj: 5:00 caminando, luego 30 s por pierna
+    const a5 = clamp((u - k5) / .3) * (1 - stretch), a30 = clamp((u - k30) / .3);
+    const ring = (a, frac, txt, sub) => { ctx.save(); ctx.globalAlpha = a; ctx.translate(540, 555); ctx.strokeStyle = 'rgba(255,255,255,.15)'; ctx.lineWidth = 14; ctx.beginPath(); ctx.arc(0, 0, 115, 0, 7); ctx.stroke(); ctx.strokeStyle = LIME; ctx.shadowColor = LIME; ctx.shadowBlur = 30; ctx.beginPath(); ctx.arc(0, 0, 115, -Math.PI / 2, -Math.PI / 2 + 2 * Math.PI * frac); ctx.stroke(); ctx.shadowBlur = 0; ctx.font = '90px Anton'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#fff'; ctx.fillText(txt, 0, 6); ctx.font = '800 30px Inter'; ctx.fillStyle = LIME; ctx.fillText(sub, 0, 155); ctx.restore(); };
+    if (a5 > 0) { const s = Math.max(0, 300 - Math.floor((u - k5) * 40)); ring(a5, s / 300, Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'), 'CAMINANDO Y BOTANDO'); }
+    if (a30 > 0) { const s = Math.max(0, 30 - Math.floor((u - k30) * 6)); ring(a30, s / 30, s + ' s', 'POR PIERNA'); }
+    vignette(.55);
+  },
 };
 // zapatilla de lado (punta a la derecha), centrada en el origen; la misma silueta que la escena plate
 function shoeSide() {
@@ -519,7 +610,7 @@ function captions(t) {
 }
 
 // ---------- transiciones de cámara ----------
-const TR = { tendon: 'zoom', office: 'pan', pogo: 'pan', plate: 'down', end: 'pan', stairs: 'pan', wall: 'zoom', squeeze: 'zoom', fit: 'pan' };
+const TR = { tendon: 'zoom', office: 'pan', pogo: 'pan', plate: 'down', end: 'pan', stairs: 'pan', wall: 'zoom', squeeze: 'zoom', fit: 'pan', buzzer: 'zoom', slump: 'down', cooldown: 'pan' };
 window.render = function (t) {
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.shadowBlur = 0; ctx.clearRect(0, 0, W, H);
   let i = SS.findIndex((S, k) => k === SS.length - 1 || t < SS[k + 1].T.start); if (i < 0) i = 0;
