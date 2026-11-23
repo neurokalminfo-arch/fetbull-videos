@@ -575,6 +575,97 @@ const SCENES = {
     if (a30 > 0) { const s = Math.max(0, 30 - Math.floor((u - k30) * 6)); ring(a30, s / 30, s + ' s', 'POR PIERNA'); }
     vignette(.55);
   },
+  // --- 2026-11-23 (pádel): oscuro + lima; marcador del tercer set; el brazo va bien (check), los pies parpadean en rojo
+  scoreboard(u, S) {
+    const kt = S.at('tercer'), kb = S.at('brazo'), kp = S.at('pies');
+    nightCourt(u, .35);
+    ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(0, 0, W, H);
+    // marcador grande
+    const am = eout(clamp(u / .35));
+    ctx.save(); ctx.globalAlpha = am; ctx.translate(540, 560); ctx.scale(.85 + .15 * am, .85 + .15 * am);
+    ctx.fillStyle = '#07090d'; ctx.strokeStyle = 'rgba(200,240,49,.7)'; ctx.lineWidth = 6; ctx.shadowColor = LIME; ctx.shadowBlur = 30; rrect(-330, -120, 660, 240, 26); ctx.fill(); ctx.stroke(); ctx.shadowBlur = 0;
+    ctx.font = '800 34px Inter'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = 'rgba(255,255,255,.6)'; ctx.fillText('SET 1   SET 2', -90, -70);
+    ctx.font = '72px Anton'; ctx.fillStyle = '#e8ece4'; ctx.fillText('6-4    4-6', -90, 20);
+    ctx.fillStyle = LIME; ctx.shadowColor = LIME; ctx.shadowBlur = 30 + 10 * Math.sin(u * 6); ctx.font = '800 34px Inter'; ctx.fillText('SET 3', 220, -70); ctx.font = '110px Anton'; ctx.fillText(Math.floor(u * 1.2) % 2 ? '5-5' : '5-5', 220, 26);
+    ctx.restore();
+    // jugador cansado, respirando, sobre la pista
+    const br = Math.sin(u * 4.5) * .5 + .5;
+    const p = mix(POSE.ready, { tor: R(26), hb: R(-6), kb: R(20), fb: 0, hf: R(12), kf: R(22), ff: 0, sb: R(30), eb: R(40), sf: R(40), ef: R(50) }, .5 + .2 * br);
+    p.x = 470; p.s = 1.05; p.y = 1362 - 316 * p.s * .95 - 10; p.racket = true;
+    const F = figure(p);
+    // brazo bien: check lima
+    const ab = clamp((u - kb) / .3);
+    if (ab > 0) { ctx.save(); ctx.globalAlpha = ab; const x = F.af.el[0] + 130, y = F.af.el[1] - 120; ctx.strokeStyle = LIME; ctx.lineWidth = 14; ctx.lineCap = 'round'; ctx.shadowColor = LIME; ctx.shadowBlur = 30; ctx.beginPath(); ctx.arc(x, y, 60, 0, 7); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x - 26, y + 2); ctx.lineTo(x - 6, y + 24); ctx.lineTo(x + 28, y - 20); ctx.stroke(); ctx.restore(); label('BRAZO: BIEN', x, y + 105, { a: ab, size: 30 }); }
+    // pies: anillos rojos que parpadean
+    const ap = clamp((u - kp) / .25);
+    if (ap > 0) { for (const l of [F.lb, F.lf]) { const pul = (u * 2.2) % 1; ctx.save(); ctx.globalAlpha = ap * (1 - pul); ctx.strokeStyle = '#ff4a3a'; ctx.lineWidth = 8; ctx.shadowColor = '#ff4a3a'; ctx.shadowBlur = 30; ctx.beginPath(); ctx.ellipse(l.an[0] + 20, l.an[1] + 10, 70 + pul * 60, 24 + pul * 20, 0, 0, 7); ctx.stroke(); ctx.restore(); }
+      label('FALLAN LOS PIES', 470, 1500, { a: ap, size: 38, bg: '#ff4a3a', fg: '#fff', s: .85 + .15 * eout(ap) }); }
+    vignette(.55);
+  },
+  // --- 2026-11-23 (pádel): azul frío; plantado mirando la bola, la bola pasa y el reloj marca TARDE
+  planted(u, S) {
+    const ko = S.at('oficina'), kpl = S.at('plantado'), kbo = S.at('bola'), kar = S.at('arrancas'), kta = S.at('tarde');
+    ctx.fillStyle = vgrad('#030814', '#0b2250'); ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = rgrad(540, 380, 820, 'rgba(110,160,255,.28)', 'rgba(110,160,255,0)'); ctx.fillRect(0, 0, W, H);
+    // cristales de pádel al fondo
+    ctx.strokeStyle = 'rgba(140,190,255,.25)'; ctx.lineWidth = 4; for (let i = 0; i < 6; i++) ctx.strokeRect(60 + i * 160, 760, 160, 600);
+    const gy = 1362; ctx.fillStyle = vgrad('#0d2a5a', '#040a18', gy, H); ctx.fillRect(0, gy, W, H - gy); glowLine(0, gy, W, gy, 'rgba(140,190,255,.8)', 5, 18);
+    // maletín de oficina que cae al suelo al empezar
+    const ao = clamp((u - ko) / .3);
+    if (ao > 0 && u < kar) { ctx.save(); ctx.globalAlpha = ao * clamp((kar - u) / .3); ctx.translate(230, lerp(1150, gy - 60, eout(ao))); ctx.fillStyle = '#1a2a48'; ctx.strokeStyle = 'rgba(200,220,255,.7)'; ctx.lineWidth = 5; rrect(-80, -55, 160, 110, 14); ctx.fill(); ctx.stroke(); rrect(-30, -80, 60, 30, 10); ctx.stroke(); ctx.restore(); }
+    // jugador: rígido y plantado; al "arrancas" se inclina tarde
+    const go = clamp((u - kar) / .5);
+    const p = mix(mix(POSE.stand, POSE.stiff, .5), { tor: R(24), hb: R(-20), kb: R(30), fb: 0, hf: R(30), kf: R(30), ff: 0, sb: R(-30), eb: R(30), sf: R(60), ef: R(20) }, eout(go));
+    p.x = 520 + 60 * eout(go); p.s = 1.1; p.y = gy - 316 * 1.1 - 14; p.racket = true; p.racketA = R(-170);
+    const F = figure(p, { rim: 'rgba(140,190,255,.9)', rimCol: 'rgba(140,190,255,.5)' });
+    // pies clavados: bloques de hielo/anclas
+    const apl = clamp((u - kpl) / .3) * (1 - go * .6);
+    if (apl > 0) { for (const l of [F.lb, F.lf]) { ctx.save(); ctx.globalAlpha = apl; ctx.fillStyle = 'rgba(160,210,255,.35)'; ctx.strokeStyle = '#cfe4ff'; ctx.lineWidth = 4; ctx.shadowColor = '#9cc8ff'; ctx.shadowBlur = 24; rrect(l.an[0] - 60, l.an[1] - 30, 150, 70, 10); ctx.fill(); ctx.stroke(); ctx.restore(); }
+      label('PLANTADO', 520, 1480, { a: apl, size: 38, bg: '#9cc8ff', fg: '#06101e' }); }
+    // la bola pasa por delante
+    const ab = clamp((u - kbo + .5) / 2.2);
+    if (ab > 0 && ab < 1) { const bx = lerp(-60, 1000, ab), by = 820 - Math.sin(ab * Math.PI) * 240; for (let k = 1; k < 6; k++) { ctx.globalAlpha = .12 * (6 - k); ctx.fillStyle = '#e8ff7a'; ctx.beginPath(); ctx.arc(bx - k * 26, by + k * 5 * Math.cos(ab * Math.PI), 26 - k * 3, 0, 7); ctx.fill(); } ctx.globalAlpha = 1; ctx.fillStyle = '#e8ff5a'; ctx.shadowColor = LIME; ctx.shadowBlur = 30; ctx.beginPath(); ctx.arc(bx, by, 28, 0, 7); ctx.fill(); ctx.shadowBlur = 0; }
+    // ojos siguiendo la bola: línea de mirada
+    if (ab > 0 && ab < 1 && go < .5) { ctx.save(); ctx.globalAlpha = .35; ctx.setLineDash([10, 14]); ctx.strokeStyle = '#cfe4ff'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(F.head[0], F.head[1]); ctx.lineTo(lerp(-60, 1000, ab), 820 - Math.sin(ab * Math.PI) * 240); ctx.stroke(); ctx.restore(); }
+    // reloj TARDE
+    const at = clamp((u - kta) / .3);
+    if (at > 0) { ctx.save(); ctx.globalAlpha = at; ctx.translate(540, 600); ctx.scale(.8 + .2 * eout(at), .8 + .2 * eout(at)); ctx.strokeStyle = '#ff5a4a'; ctx.lineWidth = 12; ctx.shadowColor = '#ff5a4a'; ctx.shadowBlur = 30; ctx.beginPath(); ctx.arc(0, 0, 100, 0, 7); ctx.stroke(); ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -70); ctx.moveTo(0, 0); const a = u * 8; ctx.lineTo(Math.sin(a) * 60, -Math.cos(a) * 60); ctx.stroke(); ctx.restore(); label('LLEGAS TARDE', 540, 770, { a: at, size: 38, bg: '#ff5a4a', fg: '#fff' }); }
+    vignette(.6);
+  },
+  // --- 2026-11-23 (pádel): cálido/atardecer; suelo que quema: pasitos cortos y saltito (split step) cuando golpea el rival
+  hotfloor(u, S) {
+    const kp = S.at('pasitos'), kq = S.at('quemara'), kr = S.at('rival'), ks = S.at('saltito');
+    ctx.fillStyle = vgrad('#1a0602', '#7a2a06'); ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = rgrad(540, 1400, 900, 'rgba(255,140,40,.35)', 'rgba(255,140,40,0)'); ctx.fillRect(0, 0, W, H);
+    const gy = 1362;
+    // rival al fondo (pequeño) que golpea
+    const hitT = ks - .45, hp = clamp((u - (hitT - .5)) / .5);
+    const rp = mix(POSE.ready, { tor: R(-10), hb: R(-10), kb: R(20), fb: 0, hf: R(14), kf: R(20), ff: 0, sb: R(20), eb: R(40), sf: R(-150), ef: R(10) }, Math.sin(Math.PI * clamp(hp)) ); rp.x = 760; rp.s = .42; rp.y = 900; rp.racket = true;
+    ctx.save(); ctx.globalAlpha = .9; figure(rp, { rim: 'rgba(255,170,90,.8)', rimCol: 'rgba(255,170,90,.4)', col: '#2a0e04', back: '#1e0a03' }); ctx.restore();
+    // red
+    ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(60, 1010, 960, 90); glowLine(60, 1010, 1020, 1010, 'rgba(255,220,180,.7)', 4, 10);
+    // suelo incandescente
+    ctx.fillStyle = vgrad('#c2440a', '#3a0e02', gy, H); ctx.fillRect(0, gy, W, H - gy);
+    const aq = clamp((u - kq + .3) / .4);
+    for (let i = 0; i < 9; i++) { const x = 60 + i * 120, fl = .5 + .5 * Math.sin(u * 7 + i * 1.7); ctx.fillStyle = `rgba(255,${150 + 60 * fl},60,${(.15 + .35 * fl) * (.3 + .7 * aq)})`; ctx.beginPath(); ctx.ellipse(x, gy + 70 + (i % 2) * 60, 90, 18, 0, 0, 7); ctx.fill(); }
+    glowLine(0, gy, W, gy, 'rgba(255,190,90,.95)', 6, 26);
+    // jugador: pasitos cortos (fase rápida), luego saltito
+    const sp = ks - .05, hop = clamp((u - sp) / .45), inHop = hop > 0 && hop < 1;
+    let p, lift = 0;
+    if (inHop) { const g = pogo(hop, 90); p = mix(g.pose, POSE.ready, .5); lift = g.lift; }
+    else if (hop >= 1) { p = { ...POSE.ready }; }
+    else { const w = walk(u * 16); p = mix(POSE.ready, w, .35); }
+    p.x = 420 + (hop >= 1 ? 0 : Math.sin(u * 3) * 30); p.s = 1.1; p.y = gy - 316 * 1.1 * .93 - 6 - lift + (inHop || hop >= 1 ? 0 : Math.abs(Math.sin(u * 16)) * -10); p.racket = true;
+    const F = figure(p);
+    // chispas bajo los pies
+    if (!inHop) for (const l of [F.lb, F.lf]) for (let k = 0; k < 4; k++) { const ph = (u * 3 + k / 4 + (l === F.lb ? .5 : 0)) % 1; ctx.save(); ctx.globalAlpha = (1 - ph) * (.4 + .6 * aq); ctx.fillStyle = '#ffd27a'; ctx.shadowColor = '#ffb040'; ctx.shadowBlur = 16; ctx.beginPath(); ctx.arc(l.an[0] + (rnd(k + Math.floor(u * 3)) - .5) * 80, l.an[1] + 20 - ph * 90, 6, 0, 7); ctx.fill(); ctx.restore(); }
+    if (inHop) spring(F.lf.an[0] + 10, F.lf.an[1] + 30, F.lf.an[0] + 10, gy, 4, 24, LIME, 6, 24);
+    const ap = clamp((u - kp) / .3), as = clamp((u - ks) / .3);
+    if (ap > 0) label('PASITOS CORTOS', 470, 1500, { a: as > 0 ? 0 : ap, size: 38, bg: '#ffb040', fg: '#1a0602', s: .85 + .15 * eout(ap) });
+    if (as > 0) { label('¡SALTITO! (SPLIT STEP)', 470, 1500, { a: as, size: 36, s: .85 + .15 * eout(as) }); }
+    const ar = clamp((u - kr) / .3); if (ar > 0 && !(as > 0)) { ctx.save(); ctx.globalAlpha = ar; ctx.strokeStyle = '#fff'; ctx.lineWidth = 5; for (let k = 0; k < 3; k++) { const a = R(-40 + k * 40); ctx.beginPath(); ctx.moveTo(760 + Math.cos(a) * 60, 760 + Math.sin(a) * 60); ctx.lineTo(760 + Math.cos(a) * 100, 760 + Math.sin(a) * 100); ctx.stroke(); } ctx.restore(); }
+    vignette(.5);
+  },
 };
 // zapatilla de lado (punta a la derecha), centrada en el origen; la misma silueta que la escena plate
 function shoeSide() {
@@ -610,7 +701,7 @@ function captions(t) {
 }
 
 // ---------- transiciones de cámara ----------
-const TR = { tendon: 'zoom', office: 'pan', pogo: 'pan', plate: 'down', end: 'pan', stairs: 'pan', wall: 'zoom', squeeze: 'zoom', fit: 'pan', buzzer: 'zoom', slump: 'down', cooldown: 'pan' };
+const TR = { tendon: 'zoom', office: 'pan', pogo: 'pan', plate: 'down', end: 'pan', stairs: 'pan', wall: 'zoom', squeeze: 'zoom', fit: 'pan', buzzer: 'zoom', slump: 'down', cooldown: 'pan', scoreboard: 'zoom', planted: 'down', hotfloor: 'pan' };
 window.render = function (t) {
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.shadowBlur = 0; ctx.clearRect(0, 0, W, H);
   let i = SS.findIndex((S, k) => k === SS.length - 1 || t < SS[k + 1].T.start); if (i < 0) i = 0;

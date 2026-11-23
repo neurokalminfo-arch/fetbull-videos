@@ -1,0 +1,18 @@
+{
+ "template": "story.html",
+ "slot": "pm",
+ "sport": "padel",
+ "level": "principiante",
+ "topic": "Pádel: en el tercer set del partido after-work no falla el brazo, se paran los pies; pasitos cortos de ajuste entre golpe y golpe y saltito (split step) antes de que golpee el rival (estilo historia)",
+ "scenes": [
+  {"say": "¿Sabías que en el tercer set casi nunca te falla el brazo? Te fallan los pies.", "scene": "scoreboard", "hi": ["tercer", "brazo", "pies"]},
+  {"say": "Vienes de la oficina, vas cansado y te quedas plantado mirando la bola. Cuando arrancas, ya llegas tarde.", "scene": "planted", "hi": ["oficina", "plantado", "tarde"]},
+  {"say": "Entre golpe y golpe, pasitos cortos, como si el suelo quemara. Y justo antes de que golpee el rival, un saltito.", "scene": "hotfloor", "hi": ["pasitos", "cortos", "quemara", "saltito"]},
+  {"say": "Y bajo el pie, FORGE: placa de carbono que flexiona y recupera la forma, y soporte de arco para los giros. En nuestro perfil.", "scene": "plate", "hi": ["FORGE", "carbono", "arco", "perfil"]},
+  {"say": "Mándaselo a tu compañero de pádel. ¿En qué set se te paran los pies?", "scene": "end", "cta": true, "hi": ["compañero", "set", "pies"]}
+ ],
+ "caption": "¿Sabías que en el tercer set casi nunca te falla el brazo? Te fallan los pies. 🎾😮‍💨 Vienes de la oficina, vas cansado, te quedas plantado mirando la bola… y cuando arrancas ya llegas tarde.\n\n👉 Entre golpe y golpe: pasitos cortos, como si el suelo quemara\n👉 Justo antes de que golpee el rival: un saltito (split step)\n👉 Así sales hacia la bola con las piernas ya despiertas\n\nMándaselo a tu compañero de pádel. ¿En qué set se te paran los pies? 👇",
+ "hashtags": ["#padel", "#padelamateur", "#consejospadel", "#padelespaña", "#splitstep", "#fetbull"],
+ "tiktok_title": "En el tercer set no falla el brazo: fallan los pies",
+ "music": {"bpm": 104, "key": "E"}
+}
