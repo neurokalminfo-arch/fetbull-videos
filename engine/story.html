@@ -218,7 +218,7 @@ const SCENES = {
   },
   end(u, S) {
     nightCourt(u);
-    const p = { ...POSE.ready, x: 540, s: 1.15, y: 1362 - 316 * 1.15 - 14, racket: true }; figure(p);
+    const p = { ...POSE.ready, x: 540, s: 1.15, y: 1362 - 316 * 1.15 - 14, racket: !S.s.noracket }; figure(p);
     spring(540, 1356, 540, 1440 + 20 * Math.sin(u * 6), 6, 44, LIME, 8, 30);
     const ag = clamp((u - S.at('Guárdalo')) / .35);
     if (ag > 0) { ctx.save(); ctx.globalAlpha = ag; ctx.translate(540, 540); ctx.scale(.6 + .15 * eout(ag), .6 + .15 * eout(ag)); ctx.fillStyle = LIME; ctx.shadowColor = LIME; ctx.shadowBlur = 40; ctx.beginPath(); ctx.moveTo(-60, -90); ctx.lineTo(60, -90); ctx.lineTo(60, 90); ctx.lineTo(0, 45); ctx.lineTo(-60, 90); ctx.closePath(); ctx.fill(); ctx.restore(); }
@@ -666,7 +666,113 @@ const SCENES = {
     const ar = clamp((u - kr) / .3); if (ar > 0 && !(as > 0)) { ctx.save(); ctx.globalAlpha = ar; ctx.strokeStyle = '#fff'; ctx.lineWidth = 5; for (let k = 0; k < 3; k++) { const a = R(-40 + k * 40); ctx.beginPath(); ctx.moveTo(760 + Math.cos(a) * 60, 760 + Math.sin(a) * 60); ctx.lineTo(760 + Math.cos(a) * 100, 760 + Math.sin(a) * 100); ctx.stroke(); } ctx.restore(); }
     vignette(.5);
   },
+  // --- 2026-11-24 (vóley): pabellón oscuro + lima; bloqueo en la red, el balón choca en las manos y al caer brillan las rodillas
+  net(u, S) {
+    const kb = S.at('bloqueas'), km = S.at('mano'), kr = S.at('rodillas');
+    ctx.fillStyle = vgrad('#03060a', '#0c1a14'); ctx.fillRect(0, 0, W, H);
+    for (const x of [200, 880]) { ctx.fillStyle = rgrad(x, 260, 520, 'rgba(220,255,200,.22)', 'rgba(220,255,200,0)'); ctx.fillRect(0, 0, W, H); ctx.fillStyle = '#efffd8'; ctx.fillRect(x - 50, 250, 100, 18); }
+    // gradas
+    for (let r = 0; r < 5; r++) { ctx.fillStyle = `rgba(255,255,255,${.03 + r * .01})`; ctx.fillRect(0, 980 + r * 60, W, 30); }
+    const gy = 1362; ctx.fillStyle = vgrad('#14301e', '#050c08', gy, H); ctx.fillRect(0, gy, W, H - gy); glowLine(0, gy, W, gy, 'rgba(200,240,49,.85)', 5, 20);
+    // red de vóley (de lado): poste y malla alta
+    const nx = 640; ctx.fillStyle = '#1b2420'; ctx.fillRect(nx - 10, 760, 20, gy - 760);
+    ctx.save(); ctx.strokeStyle = 'rgba(255,255,255,.28)'; ctx.lineWidth = 2; for (let y = 800; y < 1000; y += 22) { ctx.beginPath(); ctx.moveTo(nx - 26, y); ctx.lineTo(nx + 26, y); ctx.stroke(); } ctx.restore();
+    ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fillRect(nx - 26, 790, 52, 210); glowLine(nx - 30, 790, nx + 30, 790, '#f4f6f0', 8, 16); glowLine(nx - 30, 1000, nx + 30, 1000, 'rgba(255,255,255,.6)', 4, 8);
+    // salto de bloqueo periódico
+    const cyc = 1.9, ph = (u % cyc) / cyc;
+    const air = ph < .55 ? Math.sin(Math.PI * ph / .55) : 0, landK = ph >= .55 ? Math.sin(Math.PI * clamp((ph - .55) / .3)) : 0;
+    const block = { tor: R(-4), hb: R(-4), kb: R(8), fb: R(20), hf: R(6), kf: R(8), ff: R(20), sb: R(168), eb: R(4), sf: R(176), ef: R(2) };
+    const squat = { tor: R(22), hb: R(-30), kb: R(70), fb: 0, hf: R(40), kf: R(76), ff: 0, sb: R(40), eb: R(50), sf: R(60), ef: R(40) };
+    const p = mix(mix(POSE.ready, block, air > 0 ? clamp(air * 2) : 0), squat, landK * .8);
+    p.x = 470; p.s = 1.05; p.y = gy - 316 * 1.05 * (1 - .18 * landK) - 10 - air * 170;
+    const F = figure(p);
+    // balón que viene del otro lado y rebota en las manos
+    const ab = clamp((u - kb + .4) / 1.2);
+    if (ph < .55 && u > .2) { const bp = clamp(ph / .3); const hx = Math.max(F.af.ha[0], F.ab.ha[0]) + 30, hy = Math.min(F.af.ha[1], F.ab.ha[1]);
+      const bx = bp < 1 ? lerp(1000, hx, bp) : lerp(hx, 1050, clamp((ph - .3) / .25)), by = bp < 1 ? lerp(520, hy, bp) : lerp(hy, 380, clamp((ph - .3) / .25));
+      ctx.save(); ctx.fillStyle = '#f4f6f0'; ctx.shadowColor = LIME; ctx.shadowBlur = 30; ctx.beginPath(); ctx.arc(bx, by, 36, 0, 7); ctx.fill(); ctx.shadowBlur = 0; ctx.strokeStyle = '#2a6cff'; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(bx, by, 36, R(20) + u * 6, R(140) + u * 6); ctx.stroke(); ctx.strokeStyle = '#ffd23a'; ctx.beginPath(); ctx.arc(bx, by, 36, R(200) + u * 6, R(320) + u * 6); ctx.stroke(); ctx.restore();
+      if (bp >= 1 && ph < .4) { ctx.save(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 5; ctx.globalAlpha = 1 - (ph - .3) / .1; for (let k = 0; k < 5; k++) { const a = R(-80 + k * 40); ctx.beginPath(); ctx.moveTo(hx + Math.cos(a) * 50, hy + Math.sin(a) * 50); ctx.lineTo(hx + Math.cos(a) * 90, hy + Math.sin(a) * 90); ctx.stroke(); } ctx.restore(); } }
+    // mano tachada y rodillas que brillan al caer
+    const amn = clamp((u - km) / .3), ar = clamp((u - kr + .1) / .3);
+    if (amn > 0 && ar <= 0) label('LA MANO NO…', 400, 1500, { a: amn, size: 38, bg: '#f4f6f0' });
+    if (ar > 0) { for (const l of [F.lb, F.lf]) { const pul = (u * 2) % 1; ctx.save(); ctx.globalAlpha = ar * (.5 + .5 * landK + .3 * (1 - pul)); ctx.strokeStyle = LIME; ctx.lineWidth = 8; ctx.shadowColor = LIME; ctx.shadowBlur = 34; ctx.beginPath(); ctx.arc(l.kn[0], l.kn[1], 46 + pul * 26, 0, 7); ctx.stroke(); ctx.restore(); }
+      label('LO FRENAN TUS RODILLAS', 470, 1500, { a: ar, size: 38, s: .85 + .15 * eout(ar) }); }
+    vignette(.55);
+  },
+  // --- 2026-11-24 (vóley): azul frío; vista de frente, cae sobre un pie con la rodilla hacia dentro
+  knees(u, S) {
+    const kt = S.at('trabajo'), kc = S.at('caes'), kp = S.at('pie'), kd = S.at('dentro');
+    ctx.fillStyle = vgrad('#020612', '#0a1c44'); ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = rgrad(540, 300, 900, 'rgba(100,150,255,.30)', 'rgba(100,150,255,0)'); ctx.fillRect(0, 0, W, H);
+    const gy = 1400; ctx.fillStyle = vgrad('#0e2658', '#030814', gy, H); ctx.fillRect(0, gy, W, H - gy); glowLine(0, gy, W, gy, 'rgba(140,190,255,.8)', 5, 18);
+    // reloj de después del trabajo
+    const at = clamp((u - kt + .2) / .4);
+    if (at > 0) { ctx.save(); ctx.globalAlpha = at * clamp(1 - (u - kc + .8) / .3); ctx.font = '120px Anton'; ctx.textAlign = 'center'; ctx.fillStyle = '#cfe0ff'; ctx.shadowColor = '#6f9cff'; ctx.shadowBlur = 30; ctx.fillText('20:30', 540, 760); ctx.font = '800 30px Inter'; ctx.shadowBlur = 0; ctx.fillStyle = 'rgba(207,224,255,.7)'; ctx.fillText('SALES DE LA OFICINA → PABELLÓN', 540, 820); ctx.restore(); }
+    // caída: baja desde arriba y apoya un pie; la rodilla de apoyo se va hacia dentro
+    const fall = eout(clamp((u - kc + .3) / .6)), cave = ease(clamp((u - kd + .4) / .6));
+    const lift = (1 - fall) * 200; const fa = clamp((u - kc + .7) / .4);
+    ctx.save(); ctx.globalAlpha = fa;
+    const fl = frontLegs(540, gy, 1.0, { lift, squat: .35 * fall + .15 * cave, liftR: 120, kneeInL: 70 * cave, wobble: Math.sin(u * 9) * 6 * cave }, { rim: 'rgba(140,190,255,.9)' });
+    ctx.restore();
+    const ap = clamp((u - kp) / .3);
+    if (ap > 0) { ctx.save(); ctx.globalAlpha = ap; ctx.fillStyle = 'rgba(160,200,255,.25)'; ctx.beginPath(); ctx.ellipse(fl.aL[0], gy + 6, 120, 22, 0, 0, 7); ctx.fill(); ctx.restore(); label('UN SOLO PIE', 300, 1500, { a: ap * (1 - clamp((u - kd) / .3)), size: 36, bg: '#9cc8ff', fg: '#06101e' }); }
+    const ad = clamp((u - kd) / .3);
+    if (ad > 0) { ctx.save(); ctx.globalAlpha = ad; ctx.strokeStyle = '#ff4a3a'; ctx.fillStyle = '#ff4a3a'; ctx.lineWidth = 10; ctx.shadowColor = '#ff4a3a'; ctx.shadowBlur = 30; const k = fl.kL; ctx.beginPath(); ctx.moveTo(k[0] - 150, k[1]); ctx.lineTo(k[0] - 40, k[1]); ctx.stroke(); ctx.beginPath(); ctx.moveTo(k[0] - 30, k[1]); ctx.lineTo(k[0] - 60, k[1] - 22); ctx.lineTo(k[0] - 60, k[1] + 22); ctx.fill(); const pul = (u * 2.4) % 1; ctx.globalAlpha = ad * (1 - pul); ctx.beginPath(); ctx.arc(k[0], k[1], 40 + pul * 50, 0, 7); ctx.stroke(); ctx.restore();
+      label('RODILLA HACIA DENTRO', 470, 1500, { a: ad, size: 38, bg: '#ff4a3a', fg: '#fff', s: .85 + .15 * eout(ad) }); }
+    vignette(.6);
+  },
+  // --- 2026-11-24 (vóley): cálido/atardecer; caída buena de frente: dos pies, rodillas sobre los dedos, cadera abajo, congela 2 s ×5
+  freeze(u, S) {
+    const kd = S.at('dos'), kdd = S.at('dedos'), kc = S.at('cadera'), k5 = S.at('cinco'), kz = S.at('congela');
+    ctx.fillStyle = vgrad('#1a0703', '#8a3608'); ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = rgrad(540, 1300, 900, 'rgba(255,160,60,.35)', 'rgba(255,160,60,0)'); ctx.fillRect(0, 0, W, H);
+    const gy = 1400; ctx.fillStyle = vgrad('#b8500e', '#2a0c02', gy, H); ctx.fillRect(0, gy, W, H - gy); glowLine(0, gy, W, gy, 'rgba(255,200,110,.95)', 6, 24);
+    // antes de "cinco": una caída lenta y buena; después: saltos repetidos que se congelan 2 s
+    let lift, squat, frozen = 0;
+    if (u < k5) { const f = eout(clamp((u - .2) / .7)); lift = (1 - f) * 320; squat = .15 + .45 * ease(clamp((u - kc + .2) / .6)); }
+    else { const cyc = 1.6, ph = ((u - k5) % cyc) / cyc; const air = ph < .35 ? Math.sin(Math.PI * ph / .35) : 0; lift = air * 230; squat = ph < .35 ? .2 * (1 - air) : .55; frozen = ph >= .38 ? 1 : 0; }
+    const fl = frontLegs(540, gy, 1.15, { lift, squat, liftR: 0, kneeInL: 0 }, {});
+    // guías: rodilla sobre los dedos
+    const add = clamp((u - kdd) / .3);
+    if (add > 0) for (const [k, a] of [[fl.kL, fl.aL], [fl.kR, fl.aR]]) { ctx.save(); ctx.globalAlpha = add * .9; ctx.setLineDash([16, 14]); glowLine(k[0], k[1] - 60, a[0], a[1] + 40, LIME, 5, 20); ctx.restore(); }
+    const ad = clamp((u - kd) / .3);
+    if (ad > 0 && u < k5) { for (const a of [fl.aL, fl.aR]) { ctx.save(); ctx.globalAlpha = ad * (lift < 20 ? 1 : .3); ctx.fillStyle = 'rgba(200,240,49,.35)'; ctx.beginPath(); ctx.ellipse(a[0], gy + 6, 90, 20, 0, 0, 7); ctx.fill(); ctx.restore(); } }
+    const ac = clamp((u - kc) / .3);
+    if (ac > 0 && u < k5) { ctx.save(); ctx.globalAlpha = ac; ctx.strokeStyle = LIME; ctx.fillStyle = LIME; ctx.lineWidth = 9; ctx.shadowColor = LIME; ctx.shadowBlur = 24; const y = fl.hip[1]; ctx.beginPath(); ctx.moveTo(840, y - 140); ctx.lineTo(840, y - 30); ctx.stroke(); ctx.beginPath(); ctx.moveTo(840, y); ctx.lineTo(818, y - 36); ctx.lineTo(862, y - 36); ctx.fill(); ctx.restore(); }
+    // etiquetas
+    let lab = null;
+    if (ad > 0 && u < kdd) lab = ['LOS DOS PIES A LA VEZ', ad];
+    else if (add > 0 && u < kc) lab = ['RODILLAS → DEDOS', add];
+    else if (ac > 0 && u < k5) lab = ['CADERA ABAJO', ac];
+    if (lab) label(lab[0], 470, 1520, { a: lab[1], size: 38, s: .85 + .15 * eout(lab[1]) });
+    // contador ×5 y congela 2 s
+    const a5 = clamp((u - k5) / .3), az = clamp((u - kz) / .3);
+    if (a5 > 0) { const n = Math.min(5, 1 + Math.floor((u - k5) / 1.6)); bigText([`*${n}/5`], 200, 900, 150, a5); }
+    if (az > 0 && frozen) { ctx.save(); ctx.globalAlpha = az * .9; ctx.strokeStyle = '#dff4ff'; ctx.lineWidth = 8; ctx.shadowColor = '#9cd8ff'; ctx.shadowBlur = 30; rrect(250, 880, 580, 560, 30); ctx.stroke(); ctx.fillStyle = 'rgba(180,230,255,.10)'; ctx.fill(); ctx.restore(); }
+    if (az > 0) label('CONGELA 2 SEGUNDOS', 470, 1520, { a: az, size: 38, bg: '#9cd8ff', fg: '#06101e' });
+    vignette(.5);
+  },
 };
+
+// piernas vistas de frente (para aterrizajes): devuelve cadera, rodillas y tobillos
+function frontLegs(cx, gy, s, o, opt = {}) {
+  const L = 170 * s, hw = 62 * s, aw = 82 * s, sq = o.squat || 0, lift = o.lift || 0;
+  const hipY = gy - 36 * s - lift - 2 * L * (1 - .32 * sq);
+  const hL = [cx - hw + (o.wobble || 0), hipY], hR = [cx + hw + (o.wobble || 0), hipY];
+  const aL = [cx - aw, gy - 36 * s - lift], aR = [cx + aw, gy - 36 * s - lift - (o.liftR || 0)];
+  const kL = [(hL[0] + aL[0]) / 2 - 18 * s * sq + (o.kneeInL || 0), (hL[1] + aL[1]) / 2], kR = [(hR[0] + aR[0]) / 2 + 18 * s * sq, (hR[1] + aR[1]) / 2 - (o.liftR || 0) * .3];
+  if (o.liftR) kR[0] += 40 * s;
+  const limb = (a, b, w1, w2) => { const dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy) || 1, nx = -dy / l, ny = dx / l; ctx.beginPath(); ctx.moveTo(a[0] + nx * w1 / 2, a[1] + ny * w1 / 2); ctx.lineTo(b[0] + nx * w2 / 2, b[1] + ny * w2 / 2); ctx.lineTo(b[0] - nx * w2 / 2, b[1] - ny * w2 / 2); ctx.lineTo(a[0] - nx * w1 / 2, a[1] - ny * w1 / 2); ctx.fill(); ctx.beginPath(); ctx.arc(a[0], a[1], w1 / 2, 0, 7); ctx.arc(b[0], b[1], w2 / 2, 0, 7); ctx.fill(); };
+  const draw = e => {
+    // tronco recortado y brazos abiertos para equilibrar
+    ctx.beginPath(); ctx.moveTo(hL[0] - 20 * s - e, hipY + 20 * s); ctx.lineTo(hR[0] + 20 * s + e, hipY + 20 * s); ctx.lineTo(hR[0] + 40 * s + e, hipY - 300 * s); ctx.lineTo(hL[0] - 40 * s - e, hipY - 300 * s); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.ellipse((hL[0] + hR[0]) / 2, hipY - 380 * s, 44 * s + e / 2, 52 * s + e / 2, 0, 0, 7); ctx.fill();
+    limb([hL[0] - 30 * s, hipY - 270 * s], [hL[0] - 150 * s, hipY - 120 * s], 30 * s + e, 22 * s + e); limb([hR[0] + 30 * s, hipY - 270 * s], [hR[0] + 150 * s, hipY - 120 * s], 30 * s + e, 22 * s + e);
+    for (const [h, k, a] of [[hL, kL, aL], [hR, kR, aR]]) { limb(h, k, 70 * s + e, 46 * s + e); limb(k, a, 46 * s + e, 26 * s + e); ctx.beginPath(); ctx.ellipse(a[0], a[1] + 22 * s, 34 * s + e, 22 * s + e / 2, 0, 0, 7); ctx.fill(); }
+  };
+  ctx.save(); ctx.shadowColor = opt.rim || LIME; ctx.shadowBlur = 26; ctx.fillStyle = opt.rim ? opt.rim.replace(/[\d.]+\)$/, '.55)') : 'rgba(200,240,49,.55)'; draw(7); ctx.shadowBlur = 0; ctx.fillStyle = INK; draw(0); ctx.restore();
+  return { hip: [cx, hipY], kL, kR, aL, aR };
+}
 // zapatilla de lado (punta a la derecha), centrada en el origen; la misma silueta que la escena plate
 function shoeSide() {
   ctx.save(); ctx.fillStyle = 'rgba(20,26,34,.95)'; ctx.strokeStyle = 'rgba(244,246,240,.6)'; ctx.lineWidth = 6; ctx.shadowColor = LIME; ctx.shadowBlur = 30;
@@ -701,7 +807,7 @@ function captions(t) {
 }
 
 // ---------- transiciones de cámara ----------
-const TR = { tendon: 'zoom', office: 'pan', pogo: 'pan', plate: 'down', end: 'pan', stairs: 'pan', wall: 'zoom', squeeze: 'zoom', fit: 'pan', buzzer: 'zoom', slump: 'down', cooldown: 'pan', scoreboard: 'zoom', planted: 'down', hotfloor: 'pan' };
+const TR = { tendon: 'zoom', office: 'pan', pogo: 'pan', plate: 'down', end: 'pan', stairs: 'pan', wall: 'zoom', squeeze: 'zoom', fit: 'pan', buzzer: 'zoom', slump: 'down', cooldown: 'pan', scoreboard: 'zoom', planted: 'down', hotfloor: 'pan', net: 'zoom', knees: 'down', freeze: 'pan' };
 window.render = function (t) {
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.shadowBlur = 0; ctx.clearRect(0, 0, W, H);
   let i = SS.findIndex((S, k) => k === SS.length - 1 || t < SS[k + 1].T.start); if (i < 0) i = 0;

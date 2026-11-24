@@ -1,0 +1,73 @@
+{
+ "template": "story.html",
+ "slot": "pm",
+ "sport": "voley",
+ "level": "principiante",
+ "topic": "Vóley: al bloquear en la red el golpe lo frenan las rodillas al caer; caer con los dos pies a la vez, rodillas hacia los dedos y cadera abajo; practicar 5 saltos congelando 2 s al caer (estilo historia)",
+ "scenes": [
+  {
+   "say": "¿Sabías que cuando bloqueas en la red, el golpe no lo frena tu mano? Lo frenan tus rodillas.",
+   "scene": "net",
+   "hi": [
+    "bloqueas",
+    "red",
+    "rodillas"
+   ]
+  },
+  {
+   "say": "Partido después del trabajo: saltas, tocas la bola y caes sobre un pie, rodillas hacia dentro.",
+   "scene": "knees",
+   "hi": [
+    "trabajo",
+    "pie",
+    "dentro"
+   ]
+  },
+  {
+   "say": "Cae con los dos pies a la vez, rodillas mirando a los dedos y cadera abajo, como si te sentaras. Practica cinco saltos y congela dos segundos al caer.",
+   "scene": "freeze",
+   "hi": [
+    "dos",
+    "dedos",
+    "cadera",
+    "cinco",
+    "congela"
+   ]
+  },
+  {
+   "say": "Y bajo el pie, FORGE: talón amortiguado con PORON y soporte de arco. En nuestro perfil.",
+   "scene": "plate",
+   "hi": [
+    "FORGE",
+    "talón",
+    "arco",
+    "perfil"
+   ]
+  },
+  {
+   "say": "Mándaselo a tu compañero de vóley. ¿Tú caes con un pie o con dos?",
+   "scene": "end",
+   "cta": true,
+   "hi": [
+    "compañero",
+    "pie",
+    "dos"
+   ],
+   "noracket": true
+  }
+ ],
+ "caption": "¿Sabías que cuando bloqueas en la red, el golpe no lo frena tu mano? Lo frenan tus rodillas al caer. 🏐 Partido después del trabajo: saltas, tocas la bola… y caes sobre un pie, con las rodillas hacia dentro.\n\n👉 Cae con los dos pies a la vez\n👉 Rodillas mirando a los dedos, cadera abajo como si te sentaras\n👉 Practica: 5 saltos y congela 2 segundos al caer\n\nMándaselo a tu compañero de vóley. ¿Tú caes con un pie o con dos? 👇",
+ "hashtags": [
+  "#voley",
+  "#voleibol",
+  "#voleyball",
+  "#consejosvoley",
+  "#bloqueo",
+  "#fetbull"
+ ],
+ "tiktok_title": "Al bloquear, el golpe lo frenan tus rodillas",
+ "music": {
+  "bpm": 98,
+  "key": "D"
+ }
+}
