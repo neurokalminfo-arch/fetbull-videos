@@ -752,6 +752,100 @@ const SCENES = {
     if (az > 0) label('CONGELA 2 SEGUNDOS', 470, 1520, { a: az, size: 38, bg: '#9cd8ff', fg: '#06101e' });
     vignette(.5);
   },
+  // --- 2026-11-25 (baloncesto): oscuro + lima; suela gigante vista desde abajo, la zona del dedo gordo lisa y en rojo
+  sole(u, S) {
+    const kr = S.at('resbalones'), kp = S.at('piernas'), ks = S.at('suela');
+    ctx.fillStyle = vgrad('#03060a', '#0c1a10'); ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = rgrad(540, 1000, 800, 'rgba(200,240,49,.16)', 'rgba(200,240,49,0)'); ctx.fillRect(0, 0, W, H);
+    ctx.save(); ctx.translate(540, 1010); ctx.rotate(R(-8 + 4 * Math.sin(u * 1.3))); const sc = .92 + .05 * eout(clamp(u / 3)); ctx.scale(sc, sc);
+    const path = () => { ctx.beginPath(); ctx.moveTo(0, -520); ctx.bezierCurveTo(190, -520, 230, -300, 210, -140); ctx.bezierCurveTo(195, -20, 120, 80, 130, 220); ctx.bezierCurveTo(140, 380, 120, 500, 0, 510); ctx.bezierCurveTo(-120, 500, -150, 380, -140, 220); ctx.bezierCurveTo(-130, 60, -215, -40, -220, -170); ctx.bezierCurveTo(-230, -330, -180, -520, 0, -520); ctx.closePath(); };
+    ctx.save(); path(); ctx.shadowColor = LIME; ctx.shadowBlur = 40; ctx.fillStyle = '#1b2026'; ctx.fill(); ctx.shadowBlur = 0; ctx.lineWidth = 8; ctx.strokeStyle = 'rgba(244,246,240,.7)'; ctx.stroke(); ctx.clip();
+    // dibujo de la suela (espiga) que se desliza un poco
+    ctx.strokeStyle = 'rgba(244,246,240,.28)'; ctx.lineWidth = 9; const off = (u * 18) % 46;
+    for (let y = -560 + off; y < 560; y += 46) { ctx.beginPath(); ctx.moveTo(-260, y + 40); ctx.lineTo(0, y); ctx.lineTo(260, y + 40); ctx.stroke(); }
+    // zona gastada bajo el dedo gordo
+    const ag = clamp((u - ks) / .35), pul = .5 + .5 * Math.sin(u * 7);
+    ctx.fillStyle = '#3a3f45'; ctx.beginPath(); ctx.ellipse(-80, -330, 120, 130, R(-10), 0, 7); ctx.fill();
+    if (ag > 0) { ctx.fillStyle = `rgba(255,74,58,${ag * (.35 + .3 * pul)})`; ctx.beginPath(); ctx.ellipse(-80, -330, 120, 130, R(-10), 0, 7); ctx.fill(); }
+    ctx.restore();
+    if (ag > 0) { ctx.save(); ctx.globalAlpha = ag; ctx.strokeStyle = '#ff4a3a'; ctx.lineWidth = 8; ctx.shadowColor = '#ff4a3a'; ctx.shadowBlur = 30; ctx.beginPath(); ctx.ellipse(-80, -330, 150 + 20 * pul, 160 + 20 * pul, R(-10), 0, 7); ctx.stroke(); ctx.restore(); }
+    ctx.restore();
+    // rayas de resbalón
+    const ar = clamp((u - kr) / .3);
+    if (ar > 0) for (let k = 0; k < 5; k++) { const ph = (u * 1.6 + k * .2) % 1; ctx.save(); ctx.globalAlpha = ar * (1 - ph) * .8; glowLine(140 + ph * 120, 560 + k * 90, 360 + ph * 300, 560 + k * 90, '#cfe4ff', 6, 16); ctx.restore(); }
+    const ap = clamp((u - kp) / .3);
+    if (ap > 0 && !(ag > 0)) label('NO SON TUS PIERNAS', 470, 1560, { a: ap, size: 38, bg: '#cfe4ff', fg: '#06101e', s: .85 + .15 * eout(ap) });
+    if (ag > 0) label('ES LA SUELA', 470, 1560, { a: ag, size: 44, bg: '#ff4a3a', fg: '#fff', s: .85 + .15 * eout(ag) });
+    vignette(.55);
+  },
+  // --- 2026-11-25 (baloncesto): pabellón azul frío de noche; botas, frenas para cambiar de dirección, el pie patina y el balón se escapa
+  skid(u, S) {
+    const kt = S.at('trabajo'), kf = S.at('frenas'), kpa = S.at('patina'), kb = S.at('balón');
+    ctx.fillStyle = vgrad('#020612', '#0a1f48'); ctx.fillRect(0, 0, W, H);
+    for (const x of [200, 880]) { ctx.fillStyle = rgrad(x, 260, 460, 'rgba(170,200,255,.28)', 'rgba(170,200,255,0)'); ctx.fillRect(0, 0, W, H); ctx.fillStyle = '#e8f0ff'; ctx.fillRect(x - 50, 248, 100, 18); }
+    // canasta al fondo, pequeña
+    ctx.strokeStyle = 'rgba(200,220,255,.5)'; ctx.lineWidth = 4; ctx.strokeRect(700, 560, 200, 130); glowLine(745, 690, 855, 690, '#ff7a1a', 6, 18);
+    const gy = 1362; ctx.fillStyle = vgrad('#1a3566', '#050c1e', gy, H); ctx.fillRect(0, gy, W, H - gy);
+    ctx.strokeStyle = 'rgba(160,190,255,.12)'; ctx.lineWidth = 3; for (let i = 0; i < 14; i++) { ctx.beginPath(); ctx.moveTo(i * 90 - 300, H); ctx.lineTo(i * 90 + 100, gy); ctx.stroke(); }
+    glowLine(0, gy, W, gy, 'rgba(140,190,255,.85)', 5, 18);
+    // reloj después del trabajo
+    const at = clamp((u - kt + .2) / .4) * clamp(1 - (u - kf) / .3);
+    if (at > 0) { ctx.save(); ctx.globalAlpha = at; ctx.font = '120px Anton'; ctx.textAlign = 'center'; ctx.fillStyle = '#cfe0ff'; ctx.shadowColor = '#6f9cff'; ctx.shadowBlur = 30; ctx.fillText('20:30', 470, 500); ctx.font = '800 30px Inter'; ctx.shadowBlur = 0; ctx.fillStyle = 'rgba(207,224,255,.8)'; ctx.fillText('SALES DEL TRABAJO → PABELLÓN', 470, 556); ctx.restore(); }
+    // jugador: corre botando → frena → patina (pie delantero se escapa)
+    const fr = clamp((u - kf + .1) / .4), sl = eout(clamp((u - kpa + .1) / .6));
+    const run = walk(u * 11);
+    const brake = { tor: R(-14), hb: R(-8), kb: R(40), fb: R(4), hf: R(40), kf: R(16), ff: R(-6), sb: R(-40), eb: R(30), sf: R(70), ef: R(20) };
+    const slip = { tor: R(-30), hb: R(-6), kb: R(56), fb: R(10), hf: R(62), kf: R(6), ff: R(-24), sb: R(-90), eb: R(20), sf: R(110), ef: R(10) };
+    const p = mix(mix(mix(POSE.ready, run, .8), brake, eout(fr)), slip, sl);
+    const runX = 300 + 60 * Math.min(u, kf) / Math.max(kf, .1);
+    p.x = runX + 120 * eout(fr) + 90 * sl; p.s = 1.1; p.y = gy - 316 * 1.1 * (1 - .06 * fr - .1 * sl) - 14 + (fr < .5 ? -Math.abs(Math.sin(u * 11)) * 14 : 0);
+    const F = figure(p, { rim: 'rgba(140,190,255,.9)', rimCol: 'rgba(140,190,255,.5)' });
+    // marcas de patinazo
+    if (sl > 0) { ctx.save(); ctx.globalAlpha = sl; glowLine(F.lf.an[0] - 260 * sl, gy + 10, F.lf.an[0] + 40, gy + 10, '#cfe4ff', 7, 22); glowLine(F.lf.an[0] - 200 * sl, gy + 34, F.lf.an[0], gy + 34, 'rgba(207,228,255,.6)', 4, 10); ctx.restore();
+      for (let k = 0; k < 6; k++) { const ph = (u * 2 + k / 6) % 1; ctx.save(); ctx.globalAlpha = sl * (1 - ph) * .7; ctx.fillStyle = '#dfe8ff'; ctx.beginPath(); ctx.arc(F.lf.toe[0] + 30 + ph * 120, gy - ph * 80 + rnd(k) * 20, 7 + 6 * ph, 0, 7); ctx.fill(); ctx.restore(); } }
+    // balón: bota junto a la mano y se escapa en "balón"
+    const ab = clamp((u - kb + .2) / .9), hand = F.af.ha;
+    let bx, by; if (ab <= 0) { const bp = Math.abs(Math.sin(u * 5.5)); bx = hand[0] + 30; by = lerp(gy - 46, hand[1] + 40, bp); } else { bx = lerp(hand[0] + 30, 860, eout(ab)); by = lerp(gy - 300, 820, eout(ab)) - Math.sin(Math.PI * ab) * 220; }
+    ctx.save(); ctx.fillStyle = '#ff7a1a'; ctx.shadowColor = '#ff9a40'; ctx.shadowBlur = 30; ctx.beginPath(); ctx.arc(bx, by, 44, 0, 7); ctx.fill(); ctx.shadowBlur = 0; ctx.strokeStyle = '#2a1004'; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(bx - 44, by); ctx.lineTo(bx + 44, by); ctx.moveTo(bx, by - 44); ctx.lineTo(bx, by + 44); ctx.stroke(); ctx.restore();
+    const af = clamp((u - kf) / .3), ap = clamp((u - kpa) / .3);
+    if (af > 0 && !(ap > 0)) label('FRENAS…', 470, 1500, { a: af, size: 40, bg: '#9cc8ff', fg: '#06101e' });
+    if (ap > 0) label('¡EL PIE PATINA!', 470, 1500, { a: ap, size: 42, bg: '#ff4a3a', fg: '#fff', s: .85 + .15 * eout(ap) });
+    vignette(.6);
+  },
+  // --- 2026-11-25 (baloncesto): cálido/atardecer; zapatilla bocarriba, se mira bajo el dedo gordo y una mano barre el polvo de la suela
+  wipe(u, S) {
+    const kv = S.at('vuelta'), kd = S.at('dedo'), kl = S.at('lisa'), km = S.at('mano'), kpo = S.at('polvo');
+    ctx.fillStyle = vgrad('#170703', '#7a3208'); ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = rgrad(540, 900, 900, 'rgba(255,160,60,.35)', 'rgba(255,160,60,0)'); ctx.fillRect(0, 0, W, H);
+    // la zapatilla gira hasta quedar bocarriba
+    const fl = ease(clamp((u - kv + .1) / .8));
+    ctx.save(); ctx.translate(540, 1080 + 10 * Math.sin(u * 2)); ctx.rotate(Math.PI * fl); ctx.scale(.95, .95); shoeSide();
+    // tacos de la suela
+    ctx.fillStyle = '#c9ccc4'; for (let x = -420; x < 380; x += 44) { const worn = x > 170 && x < 360 && fl > .9; if (!worn) ctx.fillRect(x, 160, 24, 16); }
+    ctx.restore();
+    // la suela queda arriba en y ≈ 1080 - 160*.95 ≈ 928; el antepié (punta) queda a la izquierda
+    const sy = 1080 - 165;
+    const ad = clamp((u - kd) / .3), al = clamp((u - kl) / .3);
+    if (ad > 0) { ctx.save(); ctx.globalAlpha = ad; const pul = .5 + .5 * Math.sin(u * 7); ctx.strokeStyle = al > 0 ? '#ff4a3a' : LIME; ctx.lineWidth = 8; ctx.shadowColor = ctx.strokeStyle; ctx.shadowBlur = 30; ctx.beginPath(); ctx.ellipse(285, sy - 4, 120 + 14 * pul, 54 + 8 * pul, 0, 0, 7); ctx.stroke(); ctx.restore(); }
+    // mano que barre la suela una y otra vez
+    const am = clamp((u - km + .2) / .3);
+    if (am > 0) { const ph = ((u - km + .2) % 1.1) / 1.1, hx = lerp(860, 200, ease(ph)), hy = sy - 70;
+      ctx.save(); ctx.globalAlpha = am; ctx.translate(hx, hy); ctx.rotate(R(-8)); ctx.shadowColor = LIME; ctx.shadowBlur = 24; ctx.fillStyle = 'rgba(200,240,49,.55)';
+      const hand = e => { ctx.beginPath(); ctx.ellipse(0, 0, 90 + e, 52 + e, 0, 0, 7); ctx.fill(); for (let f = 0; f < 4; f++) { rrect(-150 - e, -44 + f * 26 - e / 2, 90 + e, 22 + e, 11); ctx.fill(); } ctx.beginPath(); ctx.ellipse(10, 54, 50 + e, 20 + e, R(-30), 0, 7); ctx.fill(); rrect(60, -40 - e / 2, 120, 80 + e, 30); ctx.fill(); };
+      hand(7); ctx.shadowBlur = 0; ctx.fillStyle = INK; hand(0); ctx.restore();
+      // polvo que sale despedido
+      for (let k = 0; k < 14; k++) { const q = (ph * 1.4 + rnd(k)) % 1; ctx.save(); ctx.globalAlpha = am * (1 - q) * .8; ctx.fillStyle = '#ffd9a0'; ctx.beginPath(); ctx.arc(hx - 160 - q * 220 + rnd(k + 3) * 60, sy - 40 - q * 260 * rnd(k + 9) - 20, 5 + 8 * q, 0, 7); ctx.fill(); ctx.restore(); } }
+    // etiquetas
+    const av = clamp((u - kv) / .3), apo = clamp((u - kpo) / .3);
+    let lab = null;
+    if (apo > 0) lab = ['ADIÓS POLVO', apo, LIME, INK];
+    else if (am > 0) lab = ['ANTES DE JUGAR', am, LIME, INK];
+    else if (al > 0) lab = ['¿LISA? CÁMBIALA', al, '#ff4a3a', '#fff'];
+    else if (ad > 0) lab = ['BAJO EL DEDO GORDO', ad, LIME, INK];
+    else if (av > 0) lab = ['DALE LA VUELTA', av, '#ffb36b', '#1a0602'];
+    if (lab) label(lab[0], 470, 1520, { a: lab[1], size: 40, bg: lab[2], fg: lab[3], s: .85 + .15 * eout(lab[1]) });
+    vignette(.5);
+  },
 };
 
 // piernas vistas de frente (para aterrizajes): devuelve cadera, rodillas y tobillos
@@ -807,7 +901,7 @@ function captions(t) {
 }
 
 // ---------- transiciones de cámara ----------
-const TR = { tendon: 'zoom', office: 'pan', pogo: 'pan', plate: 'down', end: 'pan', stairs: 'pan', wall: 'zoom', squeeze: 'zoom', fit: 'pan', buzzer: 'zoom', slump: 'down', cooldown: 'pan', scoreboard: 'zoom', planted: 'down', hotfloor: 'pan', net: 'zoom', knees: 'down', freeze: 'pan' };
+const TR = { tendon: 'zoom', office: 'pan', pogo: 'pan', plate: 'down', end: 'pan', stairs: 'pan', wall: 'zoom', squeeze: 'zoom', fit: 'pan', buzzer: 'zoom', slump: 'down', cooldown: 'pan', scoreboard: 'zoom', planted: 'down', hotfloor: 'pan', net: 'zoom', knees: 'down', freeze: 'pan', sole: 'zoom', skid: 'down', wipe: 'pan' };
 window.render = function (t) {
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.shadowBlur = 0; ctx.clearRect(0, 0, W, H);
   let i = SS.findIndex((S, k) => k === SS.length - 1 || t < SS[k + 1].T.start); if (i < 0) i = 0;

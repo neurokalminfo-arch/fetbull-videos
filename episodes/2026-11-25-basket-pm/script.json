@@ -1,0 +1,72 @@
+{
+ "template": "story.html",
+ "slot": "pm",
+ "sport": "basket",
+ "level": "principiante",
+ "topic": "Baloncesto: resbalar en los cambios de dirección suele ser la suela; mirar si está lisa bajo el dedo gordo y cambiarla, y limpiar el polvo de la suela con la mano antes de jugar (estilo historia)",
+ "scenes": [
+  {
+   "say": "¿Sabías que muchos resbalones en pista no son culpa de tus piernas? Son culpa de la suela.",
+   "scene": "sole",
+   "hi": [
+    "resbalones",
+    "piernas",
+    "suela"
+   ]
+  },
+  {
+   "say": "Partido después del trabajo: frenas para cambiar de dirección, el pie patina y pierdes el balón.",
+   "scene": "skid",
+   "hi": [
+    "trabajo",
+    "frenas",
+    "patina"
+   ]
+  },
+  {
+   "say": "Dale la vuelta a tu zapatilla: si bajo el dedo gordo está lisa, cámbiala. Y antes de jugar, pasa la mano por la suela para quitar el polvo.",
+   "scene": "wipe",
+   "hi": [
+    "vuelta",
+    "dedo",
+    "lisa",
+    "mano",
+    "polvo"
+   ]
+  },
+  {
+   "say": "Y dentro, FORGE: placa de carbono y soporte de arco para los giros. En nuestro perfil.",
+   "scene": "plate",
+   "hi": [
+    "FORGE",
+    "carbono",
+    "arco",
+    "perfil"
+   ]
+  },
+  {
+   "say": "Mándaselo a tu compañero de equipo. ¿Tus zapatillas aguantan hasta acabar la temporada?",
+   "scene": "hoop",
+   "cta": true,
+   "hi": [
+    "compañero",
+    "zapatillas",
+    "temporada"
+   ]
+  }
+ ],
+ "caption": "¿Sabías que muchos resbalones en pista no son culpa de tus piernas? Son culpa de la suela. 🏀 Partido después del trabajo: frenas para cambiar de dirección, el pie patina… y adiós balón.\n\n👉 Dale la vuelta a la zapatilla y mira debajo del dedo gordo\n👉 Si está lisa, cámbiala\n👉 Antes de jugar, pasa la mano por la suela para quitar el polvo\n\nMándaselo a tu compañero de equipo. ¿Tus zapatillas aguantan hasta acabar la temporada? 👇",
+ "hashtags": [
+  "#baloncesto",
+  "#basket",
+  "#basketamateur",
+  "#zapatillasbasket",
+  "#consejosbaloncesto",
+  "#fetbull"
+ ],
+ "tiktok_title": "¿Resbalas en pista? Mira tu suela",
+ "music": {
+  "bpm": 104,
+  "key": "F"
+ }
+}
