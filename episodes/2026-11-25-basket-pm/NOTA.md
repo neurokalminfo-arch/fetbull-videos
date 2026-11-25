@@ -4,3 +4,4 @@ La clave de ElevenLabs de la tarea programada sigue dando 401 y el proxy de la s
 - `video_sin_audio.mp4` = render normal de `engine/story.html` (render.js) sin audio.
 - `bed.wav` = música + efectos de audio.py (con la bajada de música calculada desde las palabras de timing.json, sin la voz). En el sandbox de Higgsfield solo se suma la voz (+0,3 s) a bed.wav con ffmpeg y se monta con el mismo loudnorm de render.js; ese final.mp4 es el que se programa en Metricool (no está en el repo).
 Para tener el final.mp4 en el repo: arreglar la clave y ejecutar `tts.py` → `audio.py` → `render.js` con el script.json tal cual.
+- final.mp4 (md5 acc03aefbda8925bf2274e66e8010f69, 31,3 s) programado en Metricool para el 25-11 a las 19:00 (post 442061723, Instagram Reel + TikTok).
