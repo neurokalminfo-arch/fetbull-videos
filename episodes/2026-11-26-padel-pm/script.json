@@ -1,0 +1,72 @@
+{
+ "template": "story.html",
+ "slot": "pm",
+ "sport": "padel",
+ "level": "principiante",
+ "topic": "Pádel: moverse con el compañero como si os atara una cuerda; subir y bajar a la vez separados unos 3 metros y desplazarse juntos hacia el lado de la bola para no dejar el hueco del medio (estilo historia)",
+ "scenes": [
+  {
+   "say": "¿Sabías que en pádel tu compañero y tú deberíais moveros como si os atara una cuerda?",
+   "scene": "rope",
+   "hi": [
+    "pádel",
+    "compañero",
+    "cuerda"
+   ]
+  },
+  {
+   "say": "Partido después del trabajo: tu compañero sube a la red, tú te quedas atrás y la bola pasa por el hueco del medio.",
+   "scene": "gap",
+   "hi": [
+    "trabajo",
+    "red",
+    "atrás",
+    "hueco"
+   ]
+  },
+  {
+   "say": "Subid y bajad a la vez, a unos tres metros. Si la bola va a un lado, os movéis los dos hacia ese lado.",
+   "scene": "sync",
+   "hi": [
+    "vez",
+    "tres",
+    "metros",
+    "lado"
+   ]
+  },
+  {
+   "say": "Para tanto cambio de dirección, FORGE: placa de carbono, talón amortiguado y soporte de arco. En nuestro perfil.",
+   "scene": "plate",
+   "hi": [
+    "FORGE",
+    "carbono",
+    "talón",
+    "arco",
+    "perfil"
+   ]
+  },
+  {
+   "say": "Guárdalo y mándaselo a tu compañero. ¿Quién de los dos se queda siempre atrás?",
+   "scene": "end",
+   "hi": [
+    "Guárdalo",
+    "compañero",
+    "atrás"
+   ]
+  }
+ ],
+ "caption": "¿Sabías que en pádel tu compañero y tú deberíais moveros como si os atara una cuerda? 🎾 Partido después del trabajo: él sube a la red, tú te quedas atrás… y la bola pasa justo por el hueco del medio.\n\n👉 Subid y bajad a la vez\n👉 A unos 3 metros el uno del otro\n👉 Si la bola se va a un lado, os movéis los dos hacia ese lado\n\nGuárdalo y mándaselo a tu compañero. ¿Quién de los dos se queda siempre atrás? 👇",
+ "hashtags": [
+  "#padel",
+  "#padelamateur",
+  "#padeltips",
+  "#consejospadel",
+  "#padelespaña",
+  "#fetbull"
+ ],
+ "tiktok_title": "En pádel, moveos como si os atara una cuerda",
+ "music": {
+  "bpm": 98,
+  "key": "D"
+ }
+}
