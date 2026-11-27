@@ -1,0 +1,74 @@
+{
+ "template": "story.html",
+ "slot": "pm",
+ "sport": "tenis",
+ "level": "principiante",
+ "topic": "Tenis: la derecha falla porque llegas pegado a la bola; frenar con dos pasitos cortos y dejar la distancia de un brazo más la raqueta; practicar 10 derechas en el peloteo fijándote solo en eso (estilo historia)",
+ "scenes": [
+  {
+   "say": "¿Y si tu derecha no falla por el brazo, sino porque llegas pegado a la bola?",
+   "scene": "cramped",
+   "hi": [
+    "derecha",
+    "brazo",
+    "pegado"
+   ]
+  },
+  {
+   "say": "Partido después del trabajo: corres recto, frenas tarde y la bola se te mete en el cuerpo. Codo encogido, a la red.",
+   "scene": "chase",
+   "hi": [
+    "trabajo",
+    "recto",
+    "tarde",
+    "cuerpo",
+    "red"
+   ]
+  },
+  {
+   "say": "Frena con dos pasitos cortos y deja un brazo más la raqueta de distancia. En el peloteo, diez derechas pensando en eso.",
+   "scene": "spacing",
+   "hi": [
+    "pasitos",
+    "brazo",
+    "raqueta",
+    "diez"
+   ]
+  },
+  {
+   "say": "Para frenar y arrancar, FORGE: placa de carbono, talón amortiguado y soporte de arco. En nuestro perfil.",
+   "scene": "plate",
+   "hi": [
+    "FORGE",
+    "carbono",
+    "talón",
+    "arco",
+    "perfil"
+   ]
+  },
+  {
+   "say": "Guárdalo para tu próximo partido. ¿La bola se te echa encima o se te queda lejos?",
+   "scene": "end",
+   "hi": [
+    "Guárdalo",
+    "partido",
+    "encima",
+    "lejos"
+   ]
+  }
+ ],
+ "caption": "¿Y si tu derecha no falla por el brazo, sino porque llegas pegado a la bola? 🎾 Partido después del trabajo: corres recto, frenas tarde, la bola se te mete en el cuerpo… y codo encogido a la red.\n\n👉 Frena con dos pasitos cortos antes de golpear\n👉 Deja entre tú y la bola un brazo más la raqueta\n👉 En el peloteo: 10 derechas fijándote solo en eso\n\nGuárdalo para tu próximo partido. ¿A ti la bola se te echa encima o se te queda lejos? 👇",
+ "hashtags": [
+  "#tenis",
+  "#tenisamateur",
+  "#consejostenis",
+  "#derecha",
+  "#tenisespaña",
+  "#fetbull"
+ ],
+ "tiktok_title": "Tu derecha falla porque llegas pegado a la bola",
+ "music": {
+  "bpm": 104,
+  "key": "E"
+ }
+}

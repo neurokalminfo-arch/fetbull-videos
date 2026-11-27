@@ -922,7 +922,93 @@ const SCENES = {
     if (side > 0) label('LOS DOS, HACIA LA BOLA', 525, 640, { a: side, size: 40 });
     vignette(.5);
   },
+  // --- 2026-11-27 (tenis): pista de tierra batida de noche, la bola se le echa encima al jugador; rojo + lima
+  cramped(u, S) {
+    clayCourt(u, 'night');
+    const s = 1.1, gy = 1330, sway = Math.sin(u * 2.2) * 10;
+    const kp = S.at('pegado'), ap = clamp((u - kp + .2) / .5);
+    // jugador encogido: codo pegado, tronco hacia atrás
+    const p = mix({ ...POSE.ready, sf: R(-20), ef: R(140), racketA: R(-120) }, { ...POSE.ready, tor: R(-8), sf: R(-40), ef: R(150), sb: R(10), kb: R(40), kf: R(46), racketA: R(-100) }, ap);
+    p.x = 440 + sway; p.s = s; p.y = gy - 316 * s - 14; p.racket = true; const F = figure(p);
+    // la bola viene desde la derecha y se mete en el cuerpo (ciclo)
+    const cyc = 2.2, ph = (u % cyc) / cyc, bx = lerp(980, F.hip[0] + 40, eout(ph)), by = lerp(820, F.hip[1] - 60, ph) - Math.sin(Math.PI * ph) * 120;
+    for (let i = 1; i < 6; i++) { const q = Math.max(0, ph - i * .03); ctx.globalAlpha = .12 * (6 - i) / 5; ctx.fillStyle = LIME; ctx.beginPath(); ctx.arc(lerp(980, F.hip[0] + 40, eout(q)), lerp(820, F.hip[1] - 60, q) - Math.sin(Math.PI * q) * 120, 26, 0, 7); ctx.fill(); }
+    ctx.globalAlpha = 1; ctx.save(); ctx.fillStyle = '#e8ff7a'; ctx.shadowColor = LIME; ctx.shadowBlur = 40; ctx.beginPath(); ctx.arc(bx, by, 28, 0, 7); ctx.fill(); ctx.restore();
+    // zona roja de "demasiado cerca"
+    if (ap > 0) {
+      ctx.save(); ctx.globalAlpha = ap * (.55 + .25 * Math.sin(u * 9)); ctx.strokeStyle = '#ff4a3a'; ctx.lineWidth = 8; ctx.shadowColor = '#ff4a3a'; ctx.shadowBlur = 40; ctx.setLineDash([24, 18]);
+      ctx.beginPath(); ctx.arc(F.hip[0] + 20, F.hip[1] - 60, 210 + 10 * Math.sin(u * 6), 0, 7); ctx.stroke(); ctx.restore();
+      label('DEMASIADO CERCA', 540, 1480, { a: ap, size: 44, bg: '#ff4a3a', fg: '#fff', s: .85 + .15 * eout(ap) });
+    }
+    const ab = clamp((u - S.at('brazo') + .2) / .4);
+    if (ab > 0 && ap < .5) { ctx.save(); ctx.globalAlpha = ab * (1 - ap * 2); bigText(['¿EL BRAZO?'], 540, 640, 120); ctx.restore(); }
+    vignette(.6);
+  },
+  // atardecer cálido: corre recto a la bola, frena tarde y la bola se le mete en el cuerpo
+  chase(u, S) {
+    clayCourt(u, 'sunset');
+    const s = .95, gy = 1340;
+    const kt = S.at('tarde'), kc = S.at('cuerpo'), kr = S.at('red');
+    const run = clamp(u / Math.max(.8, kt)), x = lerp(120, 560, ease(run)) + (u > kt ? 30 * eout(clamp((u - kt) / .3)) : 0);
+    let p;
+    if (u < kt) { p = walk(u * 12); p.tor = R(18); }
+    else { const b = clamp((u - kt) / .3); p = mix({ ...walk(kt * 12), tor: R(18) }, { ...POSE.ready, tor: R(-10), hb: R(-30), kb: R(10), hf: R(40), kf: R(30), sf: R(-30), ef: R(150), racketA: R(-110) }, b); }
+    p.x = x; p.s = s; p.y = gy - 316 * s - 14; p.racket = true; const F = figure(p);
+    // línea recta de carrera
+    glowLine(120, gy + 40, Math.max(130, x), gy + 40, 'rgba(255,190,120,.8)', 6, 20);
+    if (u > .4) label('RECTO', 300, gy + 120, { a: clamp((u - S.at('recto') + .1) / .3), size: 34, bg: '#ffb36b' });
+    // bola: bota y viene hacia el cuerpo
+    const bt = clamp((u - .2) / Math.max(.8, kc - .2));
+    const bx = lerp(980, F.hip[0] + 50, bt), by = lerp(760, F.hip[1] - 70, bt) - Math.sin(Math.PI * Math.min(1, bt * 1.6)) * 200 * (bt < .62 ? 1 : 0);
+    ctx.save(); ctx.fillStyle = '#e8ff7a'; ctx.shadowColor = LIME; ctx.shadowBlur = 36; ctx.beginPath(); ctx.arc(bx, by, 26, 0, 7); ctx.fill(); ctx.restore();
+    // frenazo: polvo de tierra batida
+    if (u > kt) { const d = clamp((u - kt) / .8); ctx.save(); for (let i = 0; i < 18; i++) { ctx.globalAlpha = (1 - d) * .6; ctx.fillStyle = '#ffb27a'; ctx.beginPath(); ctx.arc(x - 60 - rnd(i) * 160 * d - 20, gy + 10 - rnd(i + 9) * 90 * d, 10 + rnd(i + 3) * 18, 0, 7); ctx.fill(); } ctx.restore(); }
+    if (u > kc - .1) label('¡CODO ENCOGIDO!', 560, 640, { a: clamp((u - kc + .1) / .3), size: 44, bg: '#ff4a3a', fg: '#fff' });
+    // la bola acaba en la red (al final)
+    if (u > kr - .3) { const r = clamp((u - kr + .3) / .6); ctx.save(); ctx.globalAlpha = r; ctx.strokeStyle = 'rgba(255,255,255,.7)'; ctx.lineWidth = 3; for (let xx = 640; xx < 940; xx += 20) { ctx.beginPath(); ctx.moveTo(xx, 1060); ctx.lineTo(xx, 1180); ctx.stroke(); } glowLine(630, 1060, 950, 1060, '#fff', 5, 10); ctx.fillStyle = '#e8ff7a'; ctx.beginPath(); ctx.arc(lerp(F.hip[0] + 60, 780, r), lerp(F.hip[1] - 80, 1120, r), 22, 0, 7); ctx.fill(); ctx.restore(); }
+    vignette(.55);
+  },
+  // azul frío: medida correcta, un brazo + la raqueta, con dos pasitos de ajuste y contador de 10 derechas
+  spacing(u, S) {
+    clayCourt(u, 'cold');
+    const s = 1.0, gy = 1330;
+    const kp = S.at('pasitos'), kb = S.at('brazo'), kd = S.at('diez');
+    // dos pasitos cortos antes de golpear
+    const st = clamp((u - kp + .1) / .9), hop = Math.abs(Math.sin(st * Math.PI * 2)) * (st < 1 ? 1 : 0);
+    const x = lerp(250, 330, ease(st));
+    const swing = u > kb ? ease(clamp((u - kb) / .6)) : 0;
+    const p = mix({ ...POSE.ready, sf: R(60), ef: R(40), racketA: R(-150) }, { ...POSE.ready, tor: R(10), sf: R(85), ef: R(5), racketA: R(-95) }, swing);
+    p.x = x; p.s = s; p.y = gy - 316 * s - 14 - hop * 16; p.racket = true; const F = figure(p);
+    // huellas de los dos pasitos
+    for (let i = 0; i < 2; i++) { const a = clamp((st - i * .45) * 3); if (a > 0) { ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = LIME; ctx.shadowColor = LIME; ctx.shadowBlur = 20; ctx.beginPath(); ctx.ellipse(230 + i * 55, gy + 60, 26, 12, 0, 0, 7); ctx.fill(); ctx.restore(); } }
+    if (st > .1) label('2 PASITOS', 260, gy + 140, { a: clamp(st * 2), size: 32, s: .9 });
+    // bola a la distancia buena
+    const bx = 860, by = F.hip[1] - 90 + Math.sin(u * 2) * 10;
+    ctx.save(); ctx.fillStyle = '#e8ff7a'; ctx.shadowColor = LIME; ctx.shadowBlur = 40; ctx.beginPath(); ctx.arc(bx, by, 28, 0, 7); ctx.fill(); ctx.restore();
+    // regla: brazo + raqueta
+    const am = clamp((u - kb + .2) / .6);
+    if (am > 0) { const x0 = F.hip[0] + 20, x1 = lerp(x0, bx - 30, eout(am)), yy = by + 120; ctx.save(); ctx.strokeStyle = LIME; ctx.lineWidth = 6; ctx.shadowColor = LIME; ctx.shadowBlur = 24; ctx.beginPath(); ctx.moveTo(x0, yy - 24); ctx.lineTo(x0, yy + 24); ctx.moveTo(x0, yy); ctx.lineTo(x1, yy); ctx.moveTo(x1, yy - 24); ctx.lineTo(x1, yy + 24); ctx.stroke(); ctx.restore(); if (am > .6) label('BRAZO + RAQUETA', (x0 + bx) / 2, yy + 70, { a: (am - .6) / .4, size: 32 }); }
+    // contador de 10 derechas
+    if (u > kd - .2) { const n = Math.min(10, 1 + Math.floor((u - kd + .2) / .28)); const a = clamp((u - kd + .2) / .3); ctx.save(); ctx.globalAlpha = a; bigText(['*' + n + ' / 10'], 540, 700, 150); ctx.font = '800 34px Inter'; ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.fillText('DERECHAS EN EL PELOTEO', 540, 770); ctx.restore(); }
+    vignette(.55);
+  },
 };
+// pista de tenis de tierra batida vista de lado: 'night' (oscuro + rojo), 'sunset' (cálido), 'cold' (azul)
+function clayCourt(u, mood) {
+  const sky = { night: ['#07050a', '#1a0d10'], sunset: ['#2a0f08', '#7a3414'], cold: ['#03101e', '#0b2a48'] }[mood];
+  ctx.fillStyle = vgrad(sky[0], sky[1], 0, 1100); ctx.fillRect(0, 0, W, H);
+  if (mood === 'sunset') { ctx.fillStyle = rgrad(760, 820, 520, 'rgba(255,170,80,.55)', 'rgba(255,170,80,0)'); ctx.fillRect(0, 0, W, H); ctx.fillStyle = 'rgba(255,200,120,.9)'; ctx.beginPath(); ctx.arc(760, 900, 120, Math.PI, 0); ctx.fill(); }
+  else { stars(mood === 'night' ? 11 : 17, 60, 650, .5); for (const x of [200, 880]) { ctx.fillStyle = rgrad(x, 300, 400, mood === 'night' ? 'rgba(255,120,100,.22)' : 'rgba(150,200,255,.25)', 'rgba(0,0,0,0)'); ctx.fillRect(0, 0, W, H); ctx.fillStyle = '#eef'; ctx.fillRect(x - 40, 290, 80, 18); } }
+  // valla del fondo
+  ctx.fillStyle = 'rgba(10,30,20,.6)'; ctx.fillRect(0, 900, W, 200);
+  ctx.strokeStyle = 'rgba(255,255,255,.07)'; ctx.lineWidth = 2; for (let x = 0; x < W; x += 26) { ctx.beginPath(); ctx.moveTo(x, 900); ctx.lineTo(x + 40, 1100); ctx.moveTo(x + 40, 900); ctx.lineTo(x, 1100); ctx.stroke(); }
+  // suelo de tierra batida
+  const clay = { night: ['#4a1a10', '#1e0a06'], sunset: ['#b4502a', '#5a2410'], cold: ['#5a2a24', '#1a0e14'] }[mood];
+  ctx.fillStyle = vgrad(clay[0], clay[1], 1100, H); ctx.fillRect(0, 1100, W, H - 1100);
+  if (mood === 'cold') { ctx.fillStyle = 'rgba(60,120,220,.18)'; ctx.fillRect(0, 1100, W, H - 1100); }
+  ctx.strokeStyle = 'rgba(255,255,255,.55)'; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(0, 1180); ctx.lineTo(W, 1180); ctx.moveTo(0, 1420); ctx.lineTo(W, 1420); ctx.stroke();
+  glowLine(0, 1102, W, 1102, 'rgba(200,240,49,.7)', 4, 18);
+}
 
 // piernas vistas de frente (para aterrizajes): devuelve cadera, rodillas y tobillos
 function frontLegs(cx, gy, s, o, opt = {}) {
@@ -977,7 +1063,7 @@ function captions(t) {
 }
 
 // ---------- transiciones de cámara ----------
-const TR = { tendon: 'zoom', office: 'pan', pogo: 'pan', plate: 'down', end: 'pan', stairs: 'pan', wall: 'zoom', squeeze: 'zoom', fit: 'pan', buzzer: 'zoom', slump: 'down', cooldown: 'pan', scoreboard: 'zoom', planted: 'down', hotfloor: 'pan', net: 'zoom', knees: 'down', freeze: 'pan', sole: 'zoom', skid: 'down', wipe: 'pan', rope: 'pan', gap: 'down', sync: 'zoom' };
+const TR = { tendon: 'zoom', office: 'pan', pogo: 'pan', plate: 'down', end: 'pan', stairs: 'pan', wall: 'zoom', squeeze: 'zoom', fit: 'pan', buzzer: 'zoom', slump: 'down', cooldown: 'pan', scoreboard: 'zoom', planted: 'down', hotfloor: 'pan', net: 'zoom', knees: 'down', freeze: 'pan', sole: 'zoom', skid: 'down', wipe: 'pan', rope: 'pan', gap: 'down', sync: 'zoom', cramped: 'zoom', chase: 'down', spacing: 'zoom' };
 window.render = function (t) {
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.shadowBlur = 0; ctx.clearRect(0, 0, W, H);
   let i = SS.findIndex((S, k) => k === SS.length - 1 || t < SS[k + 1].T.start); if (i < 0) i = 0;
